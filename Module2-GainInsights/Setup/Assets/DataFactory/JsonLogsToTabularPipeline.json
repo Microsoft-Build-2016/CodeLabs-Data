@@ -1,0 +1,33 @@
+{
+    "name": "JsonLogsToTabularPipeline",
+    "properties": {
+        "description": "Create tabular data using Hive",
+        "activities": [
+            {
+                "name": "LogsToCsvHiveActivity",
+                "type": "HDInsightHive",
+                "linkedServiceName": "HDInsightLinkedService",
+                "typeProperties": {
+                    "scriptPath": "partsunlimited\\Scripts\\logstocsv.hql",
+                    "scriptLinkedService": "AzureStorageLinkedService",
+                      "defines": {
+                            "inputjson": "$$Text.Format('wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/Logs/{0:yyyy}/{0:MM}/{0:dd}/', SliceStart)",
+                            "outputcsv": "$$Text.Format('wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/Stats/{0:yyyy}/{0:MM}/{0:dd}/', SliceStart)"
+                      }
+                },
+                "inputs": [
+                    { "name": "LogJsonFromBlob" }
+                ],
+                "outputs": [
+                    { "name": "LogCsvFromBlob" }
+                ],
+                "scheduler": {
+                    "frequency": "Day",
+                    "interval": 1
+                }
+            }
+        ],
+        "start": "<Start>",
+        "end": "<End>"
+    }
+}

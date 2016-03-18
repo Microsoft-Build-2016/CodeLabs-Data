@@ -1,0 +1,76 @@
+﻿@using PartsUnlimited
+@model PartsUnlimited.Models.Feedback
+
+@{
+    ViewBag.Title = $"Your feedback matters";
+}
+
+<section>
+    <div>
+        <h2>Your feedback matters</h2>
+        <div class="row">
+
+            @if (@Model.Score < 0.5)
+            {
+                <div class="col-sm-12">
+                    <h4 style="color:red">So sorry for your experience. We are constantly working to improve…</h4>
+                    <div>
+                        @Html.ActionLink("Keep Shopping", "Index", "Home", null, new { @class = "btn" })
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-sm-12">
+                    <h4 style="color:green">Thanks for your kind feedback!</h4>
+                    <div>
+                        @Html.ActionLink("Keep Shopping", "Index", "Home", null, new { @class = "btn" })
+                    </div>
+                </div>
+            }
+
+        </div>
+        <br />
+        <div class="row">
+            <p>
+                Sentiment score:
+            </p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="progress">
+                        @if (Model.Score < 0.5)
+                        {
+                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="@(Model.Score * 100)" aria-valuemin="0" aria-valuemax="100" style="width: @Math.Round(Model.Score *100)%;">
+                                @Math.Round(Model.Score * 100)%
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@(Model.Score * 100)" aria-valuemin="0" aria-valuemax="100" style="width: @Math.Round(Model.Score *100)%;">
+                                @Math.Round(Model.Score * 100)%
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <p>Key Phrases:</p>
+            <div class="row">
+                <div class="col-md-4">
+                    <ul>
+                        @if (Model.KeyPhrases != null)
+                        {
+                            @foreach (var phrase in Model.KeyPhrases.ToList())
+                            {
+                                <li>@phrase</li>
+                            }
+                        }
+                        else
+                        {
+                            <li>No key phrases found</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

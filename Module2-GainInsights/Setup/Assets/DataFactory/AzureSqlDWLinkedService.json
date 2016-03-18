@@ -1,0 +1,10 @@
+{
+    "name": "AzureSqlDWLinkedService",
+    "properties": {
+        "type": "AzureSqlDW",
+        "description": "",
+        "typeProperties": {
+            "connectionString": "Data Source=tcp:<DWServerName>.database.windows.net,1433;Initial Catalog=partsunlimited;User ID=<DWUser>@<DWServerName>;Password=<DWPassword>;Integrated Security=False;Encrypt=True;Connect Timeout=30"
+        }
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "name": "HDInsightLinkedService",
+    "properties": {
+        "type": "HDInsight",
+        "description": "",
+        "typeProperties": {
+            "clusterUri": "https://<HDIClusterName>.azurehdinsight.net/",
+            "userName": "<HDIUser>",
+            "password": "<HDIPassword>",
+            "linkedServiceName": "AzureStorageLinkedService"
+        }
+    }
+}
