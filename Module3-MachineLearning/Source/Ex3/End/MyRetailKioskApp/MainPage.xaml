@@ -9,11 +9,15 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Image x:Name="FacePhoto" Stretch="Uniform" Margin="0,0,0,30" Grid.Column="0"/>
-        <Button x:Name="BrowseButton" VerticalAlignment="Bottom" Content="Browse..." Click="BrowseButton_Click" Grid.Column="0"/>
-        <ListView x:Name="EmotionList" Grid.Column="1" Width="Auto"/>
+        <CaptureElement x:Name="capturePreview" Stretch="Uniform" Grid.Column="0"/>
+
+        <StackPanel Grid.Column="1">
+            <Button x:Name="TakePhoto" VerticalAlignment="Bottom" Content="Take photo" Click="TakePhoto_Click"/>
+            <Image x:Name="TakenPhoto" Stretch="Uniform"/>
+            <ListView x:Name="EmotionList" Width="Auto"/>
+        </StackPanel>
     </Grid>
 </Page>

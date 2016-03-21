@@ -575,99 +575,178 @@ The emotions detected are anger, contempt, disgust, fear, happiness, neutral, sa
 
 	_Project Oxford Emotion API_
 
-1. From the Solution Explorer, select the **MainPage.xaml** file.
+1. From the Solution Explorer, select the **Package.appxmanifest** file. In the **Capabilities** tab, check **Webcam**.
+
+	![Webcam capability in manifest](Images/app-manifest.png?raw=true "Webcam capability in manifest")
+
+	_Webcam capability in manifest_
+
+1. Now open the **MainPage.xaml** file.
 
 1. Locate the **\<Grid\>** tag in the XAML section of the designer, and add the following markup.
 
 	````XML
 	<Grid.ColumnDefinitions>
-		<ColumnDefinition Width="Auto"/>
-		<ColumnDefinition Width="Auto"/>
+	  <ColumnDefinition Width="2*"/>
+	  <ColumnDefinition Width="1*"/>
 	</Grid.ColumnDefinitions>
-	<Image x:Name="FacePhoto" Stretch="Uniform" Margin="0,0,0,30" Grid.Column="0"/>
-	<Button x:Name="BrowseButton" VerticalAlignment="Bottom" Content="Browse..." Grid.Column="0"/>
-	<ListView x:Name="EmotionList" Grid.Column="1" Width="Auto"/>
+	<CaptureElement x:Name="capturePreview" Stretch="Uniform" Grid.Column="0"/>
+
+	<StackPanel Grid.Column="1">
+	  <Button x:Name="TakePhoto" VerticalAlignment="Bottom" Content="Take photo"/>
+	  <Image x:Name="TakenPhoto" Stretch="Uniform"/>
+	  <ListView x:Name="EmotionList" Width="Auto"/>
+	</StackPanel>
 	````
 
-1. Double click on the Button in the design surface to generate the click method in _MainPage.xaml.cs_
+1. Open the **MainPage.xaml.cs** file, and add the following using statements for the Emotion API and the media capture.
 
-1. Add the following code in the **BrowseButton_Click** method and make the method _async_. Fix the missing using statement. This code is to pick and show an image file.
-
-	(Code Snippet - _RetailKioskApp - ImagePicker_)
+	(Code Snippet - _RetailKioskApp - Usings_)
 
 	````C#
-	// The supported input image formats includes JPEG, PNG, GIF(the first frame), BMP.Image file size should be no larger than 4MB
-	var filePicker = new FileOpenPicker();
-	filePicker.FileTypeFilter.Add(".jpeg");
-	filePicker.FileTypeFilter.Add(".png");
-	filePicker.FileTypeFilter.Add(".bmp");
-	filePicker.FileTypeFilter.Add(".gif");
+	using System.Threading.Tasks;
 
-	var storageFile = await filePicker.PickSingleFileAsync();
-	var stream = await storageFile.OpenAsync(FileAccessMode.Read);
-
-	var bitmapSource = new BitmapImage();
-	await bitmapSource.SetSourceAsync(stream);
-
-	FacePhoto.Source = bitmapSource;
-	````
-
-1. Now add the following using statements for the Emotion API.
-
-	(Code Snippet - _RetailKioskApp - Using_)
-
-	````C#
 	using Microsoft.ProjectOxford.Emotion;
 	using Microsoft.ProjectOxford.Emotion.Contract;
 
+	using Windows.Devices.Enumeration;
+	using Windows.Media.Capture;
+	using Windows.Media.MediaProperties;
+	using Windows.Storage;
+	using Windows.Storage.Streams;
+	using Windows.UI.Xaml.Media.Imaging;
 	````
 
-1. Let's add the Emotion service client to the **MainPage** class. You should set the Emotion API Primary Key that you got in the previous task.
+1. Define the class level variables to hold the media capture and set a constant with your Emotion API primary key that you got in the previous task.
 
-	(Code Snippet - _RetailKioskApp - EmotionServiceClient_)
+	(Code Snippet - _RetailKioskApp - ClassVariables_)
 
 	````C#
-	private readonly EmotionServiceClient emotionServiceClient = new EmotionServiceClient("{Emotion API Primary Key}");
+	private const string EmotionApiKey = "{Emotion API Primary Key}";
+	private MediaCapture mediaCapture;
+	private bool isCameraFound;
 	````
 
-1. Add a new method to call the Emotion service API. You're sending the image file stream but the API `RecognizeAsync` method can also use an image URL.
+1. Create a method to initialize the camera preview using the _MediaCapture_ variable and the _CapturePreview_ control for the video preview.
 
-	(Code Snippet - _RetailKioskApp - EmotionApiCall_)
+	(Code Snippet - _RetailKioskApp - InitializeMediaCapture_)
 
 	````C#
-	private async Task<Emotion[]> UploadAndDetectEmotions(StorageFile imageFile)
+	private async void InitializeMediaCapture()
 	{
-	  using (var imageFileStream = await imageFile.OpenStreamForReadAsync())
-	  {
-		  // Calls the Emotion API to detect the emotions in the image                
-		  var emotionResult = await emotionServiceClient.RecognizeAsync(imageFileStream);
-		  return emotionResult;
-	  }
+		 try
+		 {
+			  this.mediaCapture = new MediaCapture();
+			  var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
+						 
+			  // Use the front camera if found one 
+			  if (devices == null || devices.Count == 0)
+			  {
+					this.isCameraFound = false;
+					return;
+			  }
+						 
+			  MediaCaptureInitializationSettings settings;
+			  settings = new MediaCaptureInitializationSettings { VideoDeviceId = devices[0].Id }; // 0 => front, 1 => back 
+			  settings.StreamingCaptureMode = StreamingCaptureMode.Video;
+
+			  await this.mediaCapture.InitializeAsync(settings);
+			  VideoEncodingProperties resolutionMax = null;
+			  int max = 0;
+			  var resolutions = this.mediaCapture.VideoDeviceController.GetAvailableMediaStreamProperties(MediaStreamType.Photo);
+
+			  for (var i = 0; i < resolutions.Count; i++)
+			  {
+					var res = (VideoEncodingProperties)resolutions[i];
+					if (res.Width * res.Height > max)
+					{
+						 max = (int)(res.Width * res.Height);
+						 resolutionMax = res;
+					}
+			  }
+
+			  await this.mediaCapture.VideoDeviceController.SetMediaStreamPropertiesAsync(MediaStreamType.Photo, resolutionMax);
+			  this.capturePreview.Source = this.mediaCapture;
+			  this.isCameraFound = true;
+			  await this.mediaCapture.StartPreviewAsync();
+		 }
+		 catch (Exception ex)
+		 {
+			  var dialog = new Windows.UI.Popups.MessageDialog("Error while initializing media capture device: " + ex.Message);
+			  await dialog.ShowAsync();
+			  GC.Collect();
+		 }
 	}
 	````
 
-1. Now, within the **BrowseButton_Click** method, add below the call to the new method and the logic to show the scoring result in a ListView.
-
-	(Code Snippet - _RetailKioskApp - EmotionResponseHandle_)
+1. In the **MainPage** constructor add a call for the **InitializeMediaCapture** function so the Webcam preview starts once the app initializes.
 
 	````C#
-	// Emotion API call
-	var emotionText = "Face [{0}]{1} Anger:{2}{1} Contempt:{3}{1} Disgust:{4}{1} Fear:{5}{1} Happiness:{6}{1} Neutral:{7}{1} Sadness:{8}{1} Surprise:{9}{1}";
-
-	var emotionResult = await UploadAndDetectEmotions(storageFile);
-
-	for (int i = 0; i < emotionResult.Length; i++)
+	public MainPage()
 	{
-	  var scores = emotionResult[i].Scores;
-	  var textBlock = new TextBlock() { TextWrapping = TextWrapping.WrapWholeWords };
-	  textBlock.Text = string.Format(emotionText, i, Environment.NewLine, scores.Anger, scores.Contempt, scores.Disgust, scores.Fear, scores.Happiness, scores.Neutral, scores.Sadness, scores.Surprise);
-	  EmotionList.Items.Add(textBlock);
+		this.InitializeComponent();
+		this.InitializeMediaCapture();
 	}
 	````
 
-1. Press **F5** to build and run the app. Click **Browse**, select an image file and check the results.
+1. Go to the **MainPage.xaml** design surface and double click on the Take photo button to generate the click method in _MainPage.xaml.cs_
 
-	> **Note:** Values ending with **E-...** are really low numbers, almost 0%.
+1. Add the following code in the **TakePhoto_Click** method and make the method _async_. This code will take a photo from the video preview, use it to invoke the function that calls the Emotions API and show the emotion results.
+
+	(Code Snippet - _RetailKioskApp - TakePhoto_)
+
+	````C#
+	if (!isCameraFound)
+	{
+		 return;
+	}
+
+	try
+	{   
+		 using (var imageStream = new InMemoryRandomAccessStream())
+		 {
+			  // capture photo and encode it
+			  var encodingProperties = ImageEncodingProperties.CreateJpeg();
+			  await this.mediaCapture.CapturePhotoToStreamAsync(encodingProperties, imageStream);
+			  await imageStream.FlushAsync();
+			  imageStream.Seek(0);
+
+			  // display photo preview
+			  var img = new BitmapImage();
+			  img.SetSource(imageStream);
+			  this.TakenPhoto.Source = img;
+
+			  imageStream.Seek(0);
+
+			  // call emotion API
+			  var emotionServiceClient = new EmotionServiceClient(EmotionApiKey);
+			  var emotionResult = await emotionServiceClient.RecognizeAsync(imageStream.AsStreamForRead());
+			  var emotionText = "Face [{0}]{1} Anger: {2:P2}{1} Contempt: {3:P2}{1} Disgust: {4:P2}{1} Fear: {5:P2}{1} Happiness: {6:P2}{1} Neutral: {7:P2}{1} Sadness: {8:P2}{1} Surprise: {9:P2}{1}";
+							  
+			  // display emotion results
+			  this.EmotionList.Items.Clear();
+			  for (int i = 0; i < emotionResult.Length; i++)
+			  {
+					var scores = emotionResult[i].Scores;
+					var textBlock = new TextBlock() { TextWrapping = TextWrapping.WrapWholeWords };
+					textBlock.Text = string.Format(emotionText, i, Environment.NewLine, scores.Anger, scores.Contempt, scores.Disgust, scores.Fear, scores.Happiness, scores.Neutral, scores.Sadness, scores.Surprise);
+					this.EmotionList.Items.Add(textBlock);
+			  }
+		 }
+	}
+	catch (Exception ex)
+	{
+		 var dialog = new Windows.UI.Popups.MessageDialog("Error while taking photo: " + ex.Message);
+		 await dialog.ShowAsync();
+		 GC.Collect();
+	}
+	````
+
+	This code first uses the _MediaCapture_ object to capture a photo an store it in a _InMemoryRandomAccessStream_ object using JPEG encoding, the creates a _BitmapImage_ object to display a preview using the Image control in the UI. 
+
+	The stream is then moved back to the begging so it can be passed to the emotion SDK by calling **RecognizeAsync**. Once the results are obtained, they are formatted as strings in a list of _TextBlock_ controls (one per recognized face).
+
+1. Press **F5** to build and run the app. Click **Take photo** and check the results.
 
 	![Running the UWP app](Images/running-uwp-app.png?raw=true "Running the UWP app")
 
