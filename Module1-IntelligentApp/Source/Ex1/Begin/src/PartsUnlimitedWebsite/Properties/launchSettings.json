@@ -1,0 +1,30 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:5233/",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "Hosting:Environment": "Development"
+      }
+    },
+    "web": {
+      "commandName": "web",
+      "environmentVariables": {
+        "Hosting:Environment": "Development"
+      },
+      "sdkVersion": "dnx-clr-win-x86.1.0.0-rc1-update1"
+    },
+    "Kestrel": {
+      "commandName": "Kestrel",
+      "sdkVersion": "dnx-clr-win-x86.1.0.0-rc1-update1"
+    }
+  }
+}
