@@ -31,10 +31,12 @@ The following is required to complete this module:
 - [Visual Studio Community 2015][1] or greater
 - [ASP.NET Core 1.0][2]
 - [Microsoft Azure Storage Explorer][3] or any other tool to manage Azure Storage
+- [Service Bus Explorer][4]
 
 [1]: https://www.visualstudio.com/products/visual-studio-community-vs
 [2]: https://docs.asp.net/en/latest/getting-started/installing-on-windows.html#install-asp-net-5-with-visual-studio
 [3]: http://storageexplorer.com/
+[4]: https://github.com/paolosalvatori/ServiceBusExplorer
 
 <a name="Setup"></a>
 ### Setup ###
@@ -250,6 +252,8 @@ In this task you'll explore the implementation and configure the DocumentDB sett
 
 1. Press **F5** to start debugging the application and navigate to its local URL.
 
+	>**Note**: If you see any CSS issue, stop the app, right-click on PartsUnlimited Dependencies and select **Restore Packages**. Then, run the grunt task **default** in the 'Task Runner Explorer' window.
+
 1. Click on any product displayed in the home page. The breakpoint should be hit.
 
 1. Press **F10** to step over to the caller function "Details". This is the controller action invoked by the _/details/{id}_ endpoint. As you can see, the action uses an instance of the ProductsRepository class to get the product data from DocumentDB and then display it in the corresponding view (preivously, it tries to retrieve from cache or store it if it's not cached).
@@ -391,7 +395,7 @@ In this task, you'll verify that the events are being sent to your Event Hub.
 
 	_Getting the service bus RootManageSharedAccessKey_
 
-1. Download and run the [ServiceBusExplorer](https://github.com/paolosalvatori/ServiceBusExplorer).
+1. Run **Service Bus Explorer**.
 
 1. Click **File** -> **Connect**, select _Enter connection string_ from the Service Bus Namespaces list and paste the **RootManageSharedAccessKey** you copied before.
 

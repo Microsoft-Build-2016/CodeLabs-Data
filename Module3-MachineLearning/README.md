@@ -172,7 +172,7 @@ In this task, you'll update the PartsUnlimited website to use the Recommendation
 
 1. Run the application and select any product to see the details and recommended items.
 
-	>**Note**: If you see any CSS issue, stop the app, right-click on PartsUnlimited Dependencies and select **Restore Packages**.
+	>**Note**: If you see any CSS issue, stop the app, right-click on PartsUnlimited Dependencies and select **Restore Packages**. Then, run the grunt task **default** in the 'Task Runner Explorer' window.
 
 	![Recommendations for an item](Images/ex1-task2-website.png?raw=true "Recommendations for an item")
 
@@ -309,9 +309,9 @@ In this task, you'll update the PartsUnlimited website to analyze the user feedb
 
 1. Open the **Details.cshtml** file located in the **Views / Store** folder and add the following code snippet before the last section. This will add a section on the website that will allow the user to send feedback comments about the item.
 
- (Code Snippet - _MachineLearning - DetailsView_)
- <!-- mark:7-27 -->
- ````C#
+	(Code Snippet - _MachineLearning - DetailsView_)
+	<!-- mark:7-27 -->
+	````C#
                 <a href="@Url.Action("AddToCart", "ShoppingCart", new { id = Model.ProductId })" class="btn">Add to Cart</a>
             </div>
         </div>
