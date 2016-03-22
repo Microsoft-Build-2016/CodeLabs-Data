@@ -81,14 +81,17 @@
 
         public Product GetById(int id)
         {
-            // TODO: implement GetById
-            throw new NotImplementedException();
+            return this.Set<Product>()
+                    .Where(d => d.ProductId == id)
+                    .AsEnumerable()
+                    .FirstOrDefault();
         }
 
         public IEnumerable<Product> Find(Expression<Func<Product, bool>> predicate)
         {
-            // TODO: implement Find
-            throw new NotImplementedException();
+            return this.Set<Product>()
+                    .Where(predicate)
+                    .AsEnumerable();
         }
 
         public IQueryable<T> Set<T>()
@@ -98,8 +101,13 @@
 
         public async Task CreateAsync(Product product)
         {
-            // TODO: implement CreateAsync
-            throw new NotImplementedException();
+            if (product.ProductId == 0)
+            {
+                product.ProductId = GenerateProductId();
+            }
+
+            var response = await this.Client.CreateDocumentAsync(this.Collection.SelfLink, product);
+            this.EnsureSuccessStatusCode(response);
         }
 
         public async Task UpdateAsync(Product product)

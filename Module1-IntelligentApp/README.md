@@ -170,44 +170,82 @@ In this task you'll explore the implementation and configure the DocumentDB sett
 	}
 	````
 
-1. You will use the **GetById** and **Find** methods to query DocumentDB using the [CreateDocumentQuery](https://msdn.microsoft.com/en-us/library/microsoft.azure.documents.client.documentclient.createdocumentquery.aspx) method.
+1. Check the **Set<****T****>** function. This is a generic helper function that uses the "Client" object to create and return a query of the given type.
 
 	````C#
-	public Product GetById(int id)
-	{
-			return this.Set<Product>()
-							.Where(d => d.ProductId == id)
-							.AsEnumerable()
-							.FirstOrDefault();
-	}
-
-	public IEnumerable<Product> Find(Expression<Func<Product, bool>> predicate)
-	{
-			return this.Set<Product>()
-							.Where(predicate)
-							.AsEnumerable();
-	}
-
 	public IQueryable<T> Set<T>()
 	{
 			return this.Client.CreateDocumentQuery<T>(this.Collection.SelfLink);
 	}
 	````
 
-1. A [document](https://azure.microsoft.com/documentation/articles/documentdb-resources/#documents) can be created using the [CreateDocumentAsync](https://msdn.microsoft.com/library/microsoft.azure.documents.client.documentclient.createdocumentasync.aspx)  method.
+1. You will use the **GetById** and **Find** methods to query DocumentDB using the [CreateDocumentQuery](https://msdn.microsoft.com/en-us/library/microsoft.azure.documents.client.documentclient.createdocumentquery.aspx) method. So let's implement them:
 
-	````C#
-	public async Task CreateAsync(Product product)
-	{
+	1. Locate the **GetById** method and remove the current code (_TODO comment and the NotImplementedException_).
+
+	1. Write code to call the **Set** helper function using the **Product** type and use LINQ methods to filter results by the **ProductId** using the **id** parameter and return the first finding.
+
+		(Code Snippet - _IntelligentApplication - GetById_)
+		<!-- mark:3-6 -->
+		````C#
+		public Product GetById(int id)
+		{
+			return this.Set<Product>()
+					.Where(d => d.ProductId == id)
+					.AsEnumerable()
+					.FirstOrDefault();
+		}
+		````
+
+	1. Repeat the steps to implement the **Find** function. Also use the **Set** helper function and LINQ functions but this time use the **predicate** parameter to filter and return all the results.
+
+		(Code Snippet - _IntelligentApplication - Find_)
+		<!-- mark:3-5 -->
+		````C#
+		public IEnumerable<Product> Find(Expression<Func<Product, bool>> predicate)
+		{
+			return this.Set<Product>()
+					.Where(predicate)
+					.AsEnumerable();
+		}
+		````
+
+1. A [document](https://azure.microsoft.com/documentation/articles/documentdb-resources/#documents) can be created using the [CreateDocumentAsync](https://msdn.microsoft.com/library/microsoft.azure.documents.client.documentclient.createdocumentasync.aspx) method. Let's create a function in the repository to create products using the _CreateDocumentAsync_.
+
+	1. Locate the **CreateAsync** method and remove the current code (_TODO comment and the NotImplementedException_).
+
+	1. First we have to set the ProductId if it not already set. To do this, we can use the **GenerateProductId** helper function that will find the maximum ProductId value and return the incremented value.
+
+		(Code Snippet - _IntelligentApplication - CreateAsyncCheckProductId_)
+		<!-- mark:3-6 -->
+		````C#
+		public async Task CreateAsync(Product product)
+		{
 			if (product.ProductId == 0)
 			{
-					product.ProductId = GenerateProductId();
+				product.ProductId = GenerateProductId();
+			}
+		}
+		````
+
+	1. Now, we can call **CreateDocumentAsync** to persist the new product object. Also, make sure the operation succeeded by calling the helper function **EnsureSuccessStatusCode**.
+
+		(Code Snippet - _IntelligentApplication - CreateAsyncCreateDocument_)
+		<!-- mark:8-9 -->
+		````C#
+		public async Task CreateAsync(Product product)
+		{
+			if (product.ProductId == 0)
+			{
+				product.ProductId = GenerateProductId();
 			}
 
 			var response = await this.Client.CreateDocumentAsync(this.Collection.SelfLink, product);
 			this.EnsureSuccessStatusCode(response);
-	}
-	````
+		}
+		````
+
+		> **Note:** Both helper functions (_GenerateProductId_ and _EnsureSuccessStatusCode_) are pretty simple implementations and you can take a look at them at the bottom of the _ProductsRepository_ class.
 
 1. The **UpdateAsync** method uses the DocumentClient [ReplaceDocumentAsync](https://msdn.microsoft.com/library/microsoft.azure.documents.client.documentclient.replacedocumentasync.aspx) method to update and existing document. Note that the document is required.
 
