@@ -68,8 +68,44 @@ In order to run the exercises in this module, you'll need to create an HDI clust
 
 Now you can skip the manual setup instructions and start executing the exercises.
 
+<a name="ManualSetupHDI"></a>
+#### 1- Manually creating the HDI cluster ####
+
+1. In the [Microsoft Azure portal](https://portal.azure.com/), create a new HDI cluster (_New > Internet of Things > HDInsight_).
+
+1. Enter a globally unique name for the cluster.
+
+1. Select **Hadoop** cluster type.
+
+	HDInsight allows to deploy a variety of cluster types, for different data analytics workloads. Cluster types offered are:
+
+	- _Hadoop: for query and analysis workloads_
+	- HBase: for NoSQL workloads
+	- Storm: for real time event processing workloads
+	- Spark: for in-memory processing, interactive queries, stream, and machines learning workloads.
+
+1. Select an operating system for the cluster (you can choose between either Windows or Linux) and use the latest version ("Hadoop 2.7.0 (HDI 3.3)" or latest)
+
+1. Select the same Resource Group as the used for the Storage account ("**DataCodeLab**").
+
+1. Configure the cluster login credentials (for instance: **admin/P@ssword**) and the SSH creadetials if using Linux. No need to enable **Remote Desktop**. You will use the cluster credentails to access the Hive dashboard (for Windows) or Ambari portal (for Linux) when testing the HQL queries.
+
+1. Select the existing storage account you created in the previous setup task for the _data source_ and use "**hdi**" for the default container name.
+
+1. You can use 1 for the worker nodes number and the lowest pricing tiers for this module.
+
+	![Create HDI cluster](Images/setup-create-hdi.png?raw=true "Create HDI cluster")
+
+	_Create HDI cluster_
+
+1. Click **Create**. The provisioning may take 15 minutes to complete.
+
+	> **Note:** For this module we don't need to persist the cluster when deleted, so we won't configure a Hive and Oozie metastore for it. 
+
+	> 	Using the metastore helps you to retain your Hive and Oozie metadata, so that you don't need to re-create Hive tables or Oozie jobs when you create a new cluster. By default, Hive uses an embedded Azure SQL database to store this information. The embedded database can't preserve the metadata when the cluster is deleted. 
+
 <a name="ManualSetupUploadFiles"></a>
-#### 1- Manually uploading the sample files ####
+#### 2- Manually uploading the sample files ####
 
 1. In the [Microsoft Azure portal](https://portal.azure.com/), create a new Storage Account or find an existing one to reuse.
  1. Make sure to use the "_Resource Manager_" for the deployment mode.
@@ -115,42 +151,6 @@ Now you can skip the manual setup instructions and start executing the exercises
 1. Repeat to upload the **Scripts** folder.
 
 > **Note:** Alternativelly, you could use the [Blob Service REST API](https://msdn.microsoft.com/en-us/library/azure/dd135733.aspx) to automate the files upload.
-
-<a name="ManualSetupHDI"></a>
-#### 2- Manually creating the HDI cluster ####
-
-1. In the [Microsoft Azure portal](https://portal.azure.com/), create a new HDI cluster (_New > Internet of Things > HDInsight_).
-
-1. Enter a globally unique name for the cluster.
-
-1. Select **Hadoop** cluster type.
-
-	HDInsight allows to deploy a variety of cluster types, for different data analytics workloads. Cluster types offered are:
-
-	- _Hadoop: for query and analysis workloads_
-	- HBase: for NoSQL workloads
-	- Storm: for real time event processing workloads
-	- Spark: for in-memory processing, interactive queries, stream, and machines learning workloads.
-
-1. Select an operating system for the cluster (you can choose between either Windows or Linux) and use the latest version ("Hadoop 2.7.0 (HDI 3.3)" or latest)
-
-1. Select the same Resource Group as the used for the Storage account ("**DataCodeLab**").
-
-1. Configure the cluster login credentials (for instance: **admin/P@ssword**) and the SSH creadetials if using Linux. No need to enable **Remote Desktop**. You will use the cluster credentails to access the Hive dashboard (for Windows) or Ambari portal (for Linux) when testing the HQL queries.
-
-1. Select the existing storage account you created in the previous setup task for the _data source_ and use "**hdi**" for the default container name.
-
-1. You can use 1 for the worker nodes number and the lowest pricing tiers for this module.
-
-	![Create HDI cluster](Images/setup-create-hdi.png?raw=true "Create HDI cluster")
-
-	_Create HDI cluster_
-
-1. Click **Create**. The provisioning may take 15 minutes to complete.
-
-	> **Note:** For this module we don't need to persist the cluster when deleted, so we won't configure a Hive and Oozie metastore for it. 
-
-	> 	Using the metastore helps you to retain your Hive and Oozie metadata, so that you don't need to re-create Hive tables or Oozie jobs when you create a new cluster. By default, Hive uses an embedded Azure SQL database to store this information. The embedded database can't preserve the metadata when the cluster is deleted. 
 
 <a name="ManualSetupSqlDW"></a>
 #### 3- Manually creating the SQL Data Warehouse ####
