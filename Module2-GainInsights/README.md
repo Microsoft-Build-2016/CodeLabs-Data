@@ -122,9 +122,7 @@ Now you can skip the manual setup instructions and start executing the exercises
 
 1. Open Windows Explorer and browse to the module's **Setup** folder.
 
-1. Right-click **GenerateData.cmd** and select **Run as Administrator** to launch the setup process.
-
-1. Execute just the operation **1** to generate the sample data files and exit the script. The files will be generated in **Setup\Assets\Logs** using date partitioned folders.
+1. Right-click **GenerateData.cmd** and select **Run as Administrator** to generate the sample data files and exit the script. The files will be generated in **Setup\Assets\Logs** using date partitioned folders.
 
 	> **Note:** Azure Data Factory supports partitioned data. You can specify a dynamic folder path and file name for time series data with the "partitionedBy" section when defining the pipeline activities, also using Data Factory macros and the system variables: SliceStart and SliceEnd, which indicate start and end times for a given data slice. For example:
 	> 
