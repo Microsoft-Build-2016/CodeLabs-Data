@@ -42,5 +42,5 @@ for($d = 0; $d -lt $daysCount; $d++) {
 	$items = $items.Substring(0, $items.length - 1) 
 	
 	Write-Host "Saving data into $path..."
-	$items | Out-File $path -Encoding utf8 -NoNewline -force
+	[System.IO.File]::WriteAllText($path, $items)
 }
