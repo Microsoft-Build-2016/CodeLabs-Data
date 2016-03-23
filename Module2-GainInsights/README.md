@@ -89,8 +89,8 @@ Now you can skip the manual setup instructions and start executing the exercises
 1. Execute just the operation **1** to generate the sample data files and exit the script. The files will be generated in **Setup\Assets\Logs** using date partitioned folders.
 
 	> **Note:** Azure Data Factory supports partitioned data. You can specify a dynamic folder path and file name for time series data with the "partitionedBy" section when defining the pipeline activities, also using Data Factory macros and the system variables: SliceStart and SliceEnd, which indicate start and end times for a given data slice. For example:
-
-	````JavaScript
+	> 
+	> ````JavaScript
 		"folderPath": "partsunlimited/Logs/{Year}/{Month}/{Day}",
 		"partitionedBy": 
 		 [
@@ -98,7 +98,7 @@ Now you can skip the manual setup instructions and start executing the exercises
 			 { "name": "Month", "value": { "type": "DateTime", "date": "SliceStart", "format": "MM" } }, 
 			 { "name": "Day", "value": { "type": "DateTime", "date": "SliceStart", "format": "dd" } }
 		],
-	````
+	> ````
 
 1. Go back to the Azure portal and check if the storage provisioning is complete. **Take note of the storage account name and key values from the settings pane.
 
