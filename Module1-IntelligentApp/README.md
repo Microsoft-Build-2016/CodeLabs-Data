@@ -563,8 +563,7 @@ In this task, you'll create an output that will store the query results in Blob 
 	- **Storage account key**: Set the account key.
 	- **Container**: Select the name of the container.
 	- **Path pattern**: Type in a file prefix to use when writing blob output. E.g. analyticsoutput-{date}
-	- **Event Serializer Format**: We will use CSV.
-	- **Delimiter**: comma (,).
+	- **Event Serializer Format**: JSON.
 	- **Encoding**: UTF8.
 
 1. Click **Create**.
