@@ -91,14 +91,13 @@ Now you can skip the manual setup instructions and start executing the exercises
 	> **Note:** Azure Data Factory supports partitioned data. You can specify a dynamic folder path and file name for time series data with the "partitionedBy" section when defining the pipeline activities, also using Data Factory macros and the system variables: SliceStart and SliceEnd, which indicate start and end times for a given data slice. For example:
 
 	````JavaScript
-		"folderPath": "mycontainer/myfolder/{Year}/{Month}/{Day}",
-		"fileName": "{Hour}.csv",
+		"folderPath": "partsunlimited/Logs/{Year}/{Month}/{Day}",
+		"fileName": "data.txt",
 		"partitionedBy": 
 		 [
 			 { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },
 			 { "name": "Month", "value": { "type": "DateTime", "date": "SliceStart", "format": "MM" } }, 
-			 { "name": "Day", "value": { "type": "DateTime", "date": "SliceStart", "format": "dd" } }, 
-			 { "name": "Hour", "value": { "type": "DateTime", "date": "SliceStart", "format": "hh" } } 
+			 { "name": "Day", "value": { "type": "DateTime", "date": "SliceStart", "format": "dd" } }
 		],
 	````
 
