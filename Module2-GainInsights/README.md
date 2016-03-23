@@ -43,7 +43,9 @@ In order to run the exercises in this module, you'll need to create an HDI clust
 
 
 <a name="SetupScript"></a>
-#### Using the setup scripts ####
+#### Automated setup using scripts ####
+
+Using the setup script you can fully setup the environment by creating the sample data, upload to storage, create HDI cluster and SQL Data Warehouse.
 
 1. Open Windows Explorer and browse to the module's **Setup** folder.
 1. Right-click **Setup.cmd** and select **Run as Administrator** to launch the setup process.
@@ -69,7 +71,7 @@ In order to run the exercises in this module, you'll need to create an HDI clust
 Now you can skip the manual setup instructions and start executing the exercises.
 
 <a name="ManualSetupHDI"></a>
-#### 1- Manually creating the HDI cluster ####
+#### Manual Setup 1: Creating the HDI cluster ####
 
 1. In the [Microsoft Azure portal](https://portal.azure.com/), create a new HDI cluster (_New > Internet of Things > HDInsight_).
 
@@ -105,7 +107,7 @@ Now you can skip the manual setup instructions and start executing the exercises
 	> 	Using the metastore helps you to retain your Hive and Oozie metadata, so that you don't need to re-create Hive tables or Oozie jobs when you create a new cluster. By default, Hive uses an embedded Azure SQL database to store this information. The embedded database can't preserve the metadata when the cluster is deleted. 
 
 <a name="ManualSetupUploadFiles"></a>
-#### 2- Manually uploading the sample files ####
+#### Manual Setup 2: Manually uploading the sample files ####
 
 1. In the [Microsoft Azure portal](https://portal.azure.com/), create a new Storage Account or find an existing one to reuse.
  1. Make sure to use the "_Resource Manager_" for the deployment mode.
@@ -120,7 +122,7 @@ Now you can skip the manual setup instructions and start executing the exercises
 
 1. Open Windows Explorer and browse to the module's **Setup** folder.
 
-1. Right-click **Setup.cmd** and select **Run as Administrator** to launch the setup process.
+1. Right-click **GenerateData.cmd** and select **Run as Administrator** to launch the setup process.
 
 1. Execute just the operation **1** to generate the sample data files and exit the script. The files will be generated in **Setup\Assets\Logs** using date partitioned folders.
 
@@ -153,7 +155,7 @@ Now you can skip the manual setup instructions and start executing the exercises
 > **Note:** Alternativelly, you could use the [Blob Service REST API](https://msdn.microsoft.com/en-us/library/azure/dd135733.aspx) to automate the files upload.
 
 <a name="ManualSetupSqlDW"></a>
-#### 3- Manually creating the SQL Data Warehouse ####
+#### Manual Setup 3: Manually creating the SQL Data Warehouse ####
 
 1. In the [Microsoft Azure portal](https://portal.azure.com/), create a new SQL Data Warehouse (_New > Data + Storage > SQL Data Warehouse_).
 
