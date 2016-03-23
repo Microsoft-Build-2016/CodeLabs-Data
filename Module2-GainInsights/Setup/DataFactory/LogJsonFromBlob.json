@@ -5,7 +5,6 @@
         "linkedServiceName": "AzureStorageLinkedService",
         "typeProperties": {
             "folderPath": "partsunlimited/Logs/{Year}/{Month}/{Day}",
-            "fileName": "data.txt",
             "partitionedBy": 
             [
                  { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },

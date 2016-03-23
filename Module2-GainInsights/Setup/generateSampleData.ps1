@@ -1,6 +1,7 @@
 $maxRows = 1000
 $minRows = 400
 $daysCount = 4
+$filesPerDay = Get-Random -minimum 1 -maximum 5
 
 $prods = @(
 	@{ title="Halogen Headlights (2 Pack)"; cat="Lighting"; },
@@ -24,23 +25,25 @@ $prods = @(
 )
 
 for($d = 0; $d -lt $daysCount; $d++) {
-	$path = "Assets\Logs\$(Get-Date (Get-Date).AddDays(-$d) -f yyyy\\MM\\dd)\data.txt";
-
-	$folder = $path.Substring(0, $path.length - 9)
+	$folder = "Assets\Logs\$(Get-Date (Get-Date).AddDays(-$d) -f yyyy\\MM\\dd)";
 	Write-Host "Creating folder $folder..."
 	New-Item -ItemType directory -Path $folder -Force
 	
-	$items = ""
-	$totalRows = Get-Random -minimum $minRows -maximum $maxRows
+	for($i = 1; $i -le $filesPerDay; $i++) {
+		$path = "$folder\data$i.txt";
 
-	for($i = 1; $i -le $totalRows; $i++)
-	{
-		$p = Get-Random -minimum 0 -maximum $prods.length
-		$items += "{""productid"":""$($p+1)"",""title"":""$($prods[$p].title)"",""category"":""$($prods[$p].cat)"",""type"":""$(("add", "view") | Get-Random)"",""total"":""$(Get-Random -minimum 0 -maximum 200)""}`n"
+		$items = ""
+		$totalRows = Get-Random -minimum $minRows -maximum $maxRows
+
+		for($j = 1; $j -le $totalRows; $j++)
+		{
+			$p = Get-Random -minimum 0 -maximum $prods.length
+			$items += "{""productid"":""$($p+1)"",""title"":""$($prods[$p].title)"",""category"":""$($prods[$p].cat)"",""type"":""$(("add", "view") | Get-Random)"",""total"":""$(Get-Random -minimum 0 -maximum 200)""}`n"
+		}
+		
+		$items = $items.Substring(0, $items.length - 1) 
+		
+		Write-Host "Saving data into $path..."
+		[System.IO.File]::WriteAllText($path, $items)
 	}
-	
-	$items = $items.Substring(0, $items.length - 1) 
-	
-	Write-Host "Saving data into $path..."
-	[System.IO.File]::WriteAllText($path, $items)
 }

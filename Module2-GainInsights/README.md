@@ -92,7 +92,6 @@ Now you can skip the manual setup instructions and start executing the exercises
 
 	````JavaScript
 		"folderPath": "partsunlimited/Logs/{Year}/{Month}/{Day}",
-		"fileName": "data.txt",
 		"partitionedBy": 
 		 [
 			 { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },
@@ -400,7 +399,6 @@ In this task, you'll create the input and output tables corresponding to the lin
 	````JavaScript
 	"typeProperties": {
 		"folderPath": "partsunlimited/Logs/{Year}/{Month}/{Day}",
-		"fileName": "data.txt",
 		"partitionedBy": 
 		[
 			 { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },
@@ -438,7 +436,6 @@ In this task, you'll create the input and output tables corresponding to the lin
 			"linkedServiceName": "AzureStorageLinkedService",
 			"typeProperties": {
 				"folderPath": "partsunlimited/Logs/{Year}/{Month}/{Day}",
-				"fileName": "data.txt",
 				"partitionedBy": 
 				[
 					 { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },

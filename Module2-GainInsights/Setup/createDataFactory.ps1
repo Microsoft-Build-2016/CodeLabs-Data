@@ -44,6 +44,7 @@ if ($resourceGroupName -eq "") {
 ## prompt for existing storage account ##
 $storages = Get-AzureRmStorageAccount
 $storIndex = 1
+Write-Host ''
 $storages | select StorageAccountName | foreach -begin {$i=0} -process { $i++; "{0}. {1}" -f $i, $_.StorageAccountName }
 $selectedStor = Read-Host 'Select storage account'
 while( ![int]::TryParse( $selectedStor, [ref]$storIndex ) -or $storIndex -gt $storages.length -or $storIndex -lt 1) {
@@ -81,60 +82,60 @@ $end = Get-Date (Get-Date).AddDays(1) -f yyyy-MM-ddT00:00:00Z
 
 Write-Host Populating JSON snippets with setting values...
 
-(Get-Content .\Assets\DataFactory\AzureStorageLinkedService.json) | Foreach-Object {
+(Get-Content .\DataFactory\AzureStorageLinkedService.json) | Foreach-Object {
     $_ -replace '<StorageAccountName>', $storageAccountName `
     -replace '<StorageAccountKey>', $storageAccountKey
-    } | Set-Content .\Assets\DataFactory\AzureStorageLinkedService.json.temp
+    } | Set-Content .\DataFactory\AzureStorageLinkedService.json.temp
 
-(Get-Content .\Assets\DataFactory\AzureSqlDWLinkedService.json) | Foreach-Object {
+(Get-Content .\DataFactory\AzureSqlDWLinkedService.json) | Foreach-Object {
     $_ -replace '<DWServerName>', $DWServerName `
     -replace '<DWUser>', $DWUser `
     -replace '<DWPassword>', $DWPassword
-    } | Set-Content .\Assets\DataFactory\AzureSqlDWLinkedService.json.temp
+    } | Set-Content .\DataFactory\AzureSqlDWLinkedService.json.temp
 
-(Get-Content .\Assets\DataFactory\HDInsightLinkedService.json) | Foreach-Object {
+(Get-Content .\DataFactory\HDInsightLinkedService.json) | Foreach-Object {
     $_ -replace '<HDIClusterName>', $HDIClusterName `
     -replace '<HDIUser>', $HDIUser `
     -replace '<HDIPassword>', $HDIPassword
-    } | Set-Content .\Assets\DataFactory\HDInsightLinkedService.json.temp
+    } | Set-Content .\DataFactory\HDInsightLinkedService.json.temp
 
-(Get-Content .\Assets\DataFactory\JsonLogsToTabularPipeline.json) | Foreach-Object {
+(Get-Content .\DataFactory\JsonLogsToTabularPipeline.json) | Foreach-Object {
     $_ -replace '<StorageAccountName>', $HDIClusterName `
     -replace '<Start>', $start `
     -replace '<End>', $end
-    } | Set-Content .\Assets\DataFactory\JsonLogsToTabularPipeline.json.temp
+    } | Set-Content .\DataFactory\JsonLogsToTabularPipeline.json.temp
 
-(Get-Content .\Assets\DataFactory\LogsToDWPipeline.json) | Foreach-Object {
+(Get-Content .\DataFactory\LogsToDWPipeline.json) | Foreach-Object {
     $_ -replace '<Start>', $start `
     -replace '<End>', $end
-    } | Set-Content .\Assets\DataFactory\LogsToDWPipeline.json.temp
+    } | Set-Content .\DataFactory\LogsToDWPipeline.json.temp
 
-(Get-Content .\Assets\DataFactory\PopulateProductStatsDWPipeline.json) | Foreach-Object {
+(Get-Content .\DataFactory\PopulateProductStatsDWPipeline.json) | Foreach-Object {
     $_ -replace '<Start>', $start `
     -replace '<End>', $end
-    } | Set-Content .\Assets\DataFactory\PopulateProductStatsDWPipeline.json.temp
+    } | Set-Content .\DataFactory\PopulateProductStatsDWPipeline.json.temp
 
 # upload files
 Write-Host Creating linked services...
-New-AzureRmDataFactoryLinkedService $dataFactory -File .\Assets\DataFactory\AzureStorageLinkedService.json.temp
-New-AzureRmDataFactoryLinkedService $dataFactory -File .\Assets\DataFactory\AzureSqlDWLinkedService.json.temp
-New-AzureRmDataFactoryLinkedService $dataFactory -File .\Assets\DataFactory\HDInsightLinkedService.json.temp
+New-AzureRmDataFactoryLinkedService $dataFactory -File .\DataFactory\AzureStorageLinkedService.json.temp
+New-AzureRmDataFactoryLinkedService $dataFactory -File .\DataFactory\AzureSqlDWLinkedService.json.temp
+New-AzureRmDataFactoryLinkedService $dataFactory -File .\DataFactory\HDInsightLinkedService.json.temp
 
 Write-Host Creating datasets...
-New-AzureRmDataFactoryDataset $dataFactory -File .\Assets\DataFactory\LogJsonFromBlob.json
-New-AzureRmDataFactoryDataset $dataFactory -File .\Assets\DataFactory\LogCsvFromBlob.json
-New-AzureRmDataFactoryDataset $dataFactory -File .\Assets\DataFactory\LogsSqlDWOutput.json
-New-AzureRmDataFactoryDataset $dataFactory -File .\Assets\DataFactory\StatsSqlDWOuput.json
+New-AzureRmDataFactoryDataset $dataFactory -File .\DataFactory\LogJsonFromBlob.json
+New-AzureRmDataFactoryDataset $dataFactory -File .\DataFactory\LogCsvFromBlob.json
+New-AzureRmDataFactoryDataset $dataFactory -File .\DataFactory\LogsSqlDWOutput.json
+New-AzureRmDataFactoryDataset $dataFactory -File .\DataFactory\StatsSqlDWOuput.json
 
 Write-Host Creating pipelines...
-New-AzureRmDataFactoryPipeline $dataFactory -File .\Assets\DataFactory\LogsToDWPipeline.json.temp
-New-AzureRmDataFactoryPipeline $dataFactory -File .\Assets\DataFactory\JsonLogsToTabularPipeline.json.temp
-New-AzureRmDataFactoryPipeline $dataFactory -File .\Assets\DataFactory\PopulateProductStatsDWPipeline.json.temp
+New-AzureRmDataFactoryPipeline $dataFactory -File .\DataFactory\LogsToDWPipeline.json.temp
+New-AzureRmDataFactoryPipeline $dataFactory -File .\DataFactory\JsonLogsToTabularPipeline.json.temp
+New-AzureRmDataFactoryPipeline $dataFactory -File .\DataFactory\PopulateProductStatsDWPipeline.json.temp
 
 Write-Host Cleaning temporal files...
-Remove-Item .\Assets\DataFactory\AzureStorageLinkedService.json.temp
-Remove-Item .\Assets\DataFactory\AzureSqlDWLinkedService.json.temp
-Remove-Item .\Assets\DataFactory\HDInsightLinkedService.json.temp
-Remove-Item .\Assets\DataFactory\LogsToDWPipeline.json.temp
-Remove-Item .\Assets\DataFactory\JsonLogsToTabularPipeline.json.temp
-Remove-Item .\Assets\DataFactory\PopulateProductStatsDWPipeline.json.temp
+Remove-Item .\DataFactory\AzureStorageLinkedService.json.temp
+Remove-Item .\DataFactory\AzureSqlDWLinkedService.json.temp
+Remove-Item .\DataFactory\HDInsightLinkedService.json.temp
+Remove-Item .\DataFactory\LogsToDWPipeline.json.temp
+Remove-Item .\DataFactory\JsonLogsToTabularPipeline.json.temp
+Remove-Item .\DataFactory\PopulateProductStatsDWPipeline.json.temp
