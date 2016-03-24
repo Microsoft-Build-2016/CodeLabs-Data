@@ -41,39 +41,10 @@ In order to run the exercises in this module, you'll need to create an HDI clust
 
 > **Important:** when entering the names for the storage account, SQL DW server and HDInsight server, those must be **globally unique**. To ensure this, you can use your first and last name as prefixes for the resource names. For instance: "johndoestorage", "johndoehdi" and "johndoesqlserver".
 
-
-<a name="SetupScript"></a>
-#### Automated setup using scripts ####
-
-Using the setup script you can fully setup the environment by creating the sample data, upload to storage, create HDI cluster and SQL Data Warehouse.
-
-1. Open Windows Explorer and browse to the module's **Setup** folder.
-1. Right-click **Setup.cmd** and select **Run as Administrator** to launch the setup process.
-1. If the _User Account Control_ dialog box is shown, confirm the action to proceed.
-1. Select a setup operation from the menu. First generate the sample data files and then proceed with the next tasks in order.
-
-	![Setup menu](Images/setup-menu.png?raw=true "Setup menu")
-
-	_Setup menu_
-
-1. If prompted, log in with credentials where you have an available Azure subscription. You will be able to select one if you have multiple subscriptions.
-
-1. Complete the prompted values as requested on each setup step. **Take note of the account names, keys and passwords as they will be required for the exercises**. Also, the settings will be stored in .txt files inside the "Setup" folder.
-
-	The HDI cluster provisioning may take around 15 minutes. You can enter the [Microsoft Azure portal](https://portal.azure.com/) to check the status of the HDI cluster provisioning.
-
-	![HDI cluster in progress](Images/setup-inprogress-hdi.png?raw=true "HDI cluster in progress")
-
-	_HDI cluster in progress_
-
-    **Note**: to clean your subscription just delete the 'DataCodeLab' resource group and all the associated resources.
-
-Now you can skip the manual setup instructions and start executing the exercises.
-
 <a name="ManualSetupHDI"></a>
 #### Manual Setup 1: Creating the HDI cluster ####
 
-1. In the [Microsoft Azure portal](https://portal.azure.com/), create a new HDI cluster (_New > Internet of Things > HDInsight_).
+1. In the [Microsoft Azure portal](https://portal.azure.com/), create a new HDI cluster (_New > Data + Analytics > HDInsight_).
 
 1. Enter a globally unique name for the cluster.
 
@@ -81,33 +52,84 @@ Now you can skip the manual setup instructions and start executing the exercises
 
 	HDInsight allows to deploy a variety of cluster types, for different data analytics workloads. Cluster types offered are:
 
-	- _Hadoop: for query and analysis workloads_
-	- HBase: for NoSQL workloads
-	- Storm: for real time event processing workloads
-	- Spark: for in-memory processing, interactive queries, stream, and machines learning workloads.
+	- **_Hadoop**: for query and analysis workloads_
+	- **HBase**: for NoSQL workloads
+	- **Storm**: for real time event processing workloads
+	- **Spark**: for in-memory processing, interactive queries, stream, and machines learning workloads.
 
 1. Select an operating system for the cluster (you can choose between either Windows or Linux) and use the latest version ("Hadoop 2.7.0 (HDI 3.3)" or latest)
 
 1. Select the same Resource Group as the used for the Storage account ("**DataCodeLab**").
 
-1. Configure the cluster login credentials (for instance: **admin/P@ssword**) and the SSH creadetials if using Linux. No need to enable **Remote Desktop**. You will use the cluster credentails to access the Hive dashboard (for Windows) or Ambari portal (for Linux) when testing the HQL queries.
+1. Configure the cluster login credentials (for instance: **admin/myP@ssw0rd**) and the SSH creadetials if using Linux. Enable **Remote Desktop**. You will use the cluster credentails to access the Hive dashboard (for Windows) or Ambari portal (for Linux) when testing the HQL queries.
 
-1. Select the existing storage account you created in the previous setup task for the _data source_ and use "**hdi**" for the default container name.
+1. Create a new storage account for the _data source_ and use "**hdi**" for the default container name.
 
 1. You can use 1 for the worker nodes number and the lowest pricing tiers for this module.
+
+1. Click **Create**. The provisioning may take 15 minutes to complete.
 
 	![Create HDI cluster](Images/setup-create-hdi.png?raw=true "Create HDI cluster")
 
 	_Create HDI cluster_
 
-1. Click **Create**. The provisioning may take 15 minutes to complete.
+> **Note:** For this module we don't need to persist the cluster when deleted, so we won't configure a Hive and Oozie metastore for it. 
 
-	> **Note:** For this module we don't need to persist the cluster when deleted, so we won't configure a Hive and Oozie metastore for it. 
+> Using the metastore helps you to retain your Hive and Oozie metadata, so that you don't need to re-create Hive tables or Oozie jobs when you create a new cluster. By default, Hive uses an embedded Azure SQL database to store this information. The embedded database can't preserve the metadata when the cluster is deleted.
 
-	> 	Using the metastore helps you to retain your Hive and Oozie metadata, so that you don't need to re-create Hive tables or Oozie jobs when you create a new cluster. By default, Hive uses an embedded Azure SQL database to store this information. The embedded database can't preserve the metadata when the cluster is deleted. 
+> In order to configure Oozie or Hive metadata Database, first you need to create the SQL Database. To do this, navigate to _New > Data + Storage > SQL Database_ and create a _blank database_ in the same resource group that you want to use for the HDI cluster.
+
+> ![Create a SQL Database](Images/creating-the-sql-database.png?raw=true "Create a SQL Database")
+
+> _Create a SQL Database_
+
+> Then, select _Optional Configuration_ in the _New HDInsight Cluster_. Select _External Metastores_ in the _Optional Configuration_ blade and choose to use an existing SQL Database, selcting the one you created before.
+
+> ![External Metastores configuration](Images/external-metastores-configuration.png?raw=true "External Metastores configuration")
+
+> _External Metastores configuration_
+
+<a name="ManualSetupSqlDW"></a>
+#### Manual Setup 2: Manually creating the SQL Data Warehouse ####
+
+1. In the [Microsoft Azure portal](https://portal.azure.com/), create a new SQL Data Warehouse (_New > Data + Storage > SQL Data Warehouse_).
+
+1. Enter "**partsunlimited**" for the database name.
+
+1. The minimun performance of 100 DWU will be enough for this module.
+
+1. Create a new SQL Server for hosting the Data Warehouse.
+	1. Select **Create a new server** in the Server blade.
+	1. Enter a globally unique name for the server.
+	1. Enter a admin login name: **dwadmin**
+	1. Write a password for the server login: **P@ssword123**
+	1. Repeat the password to confirm it.
+	1. Select the same location used for the other services.
+
+1. Use **Blank database** for the source so a new empty database is used (it will use the "partsunlimited" name).
+
+1. Select the resource group used for all the services: **DataCodeLab**.
+
+	![Create SQL Data Warehouse](Images/setup-create-dw.png?raw=true "SQL Data Warehouse")
+
+	_SQL Data Warehouse_
+
+1. Click **Create**.
+
+1. Once created, in the _SQL Data Warehouse_ blade, click on the server name to open the Sql Server settings.
+
+1. Click **Show firewall settings**.
+
+1. Click on **Add client IP** to add a rule to enable access for your machine.
+
+	![Firewall config](Images/setup-dw-firewall.png?raw=true "Firewall config")
+
+	_Firewall config_
+
+1. Click **Save**.
 
 <a name="ManualSetupUploadFiles"></a>
-#### Manual Setup 2: Manually uploading the sample files ####
+#### Manual Setup 3: Manually uploading the sample files ####
 
 1. In the [Microsoft Azure portal](https://portal.azure.com/), create a new Storage Account or find an existing one to reuse.
  1. Make sure to use the "_Resource Manager_" for the deployment mode.
@@ -136,7 +158,7 @@ Now you can skip the manual setup instructions and start executing the exercises
 		],
 	> ````
 
-1. Go back to the Azure portal and check if the storage provisioning is complete. **Take note of the storage account name and key values from the settings pane.
+1. Go back to the Azure portal and check if the storage provisioning is complete. **Take note of the storage account name and key values from the settings pane**.
 
 	![Getting account name and key](Images/setup-storage-key.png?raw=true "Getting account name and key")
 
@@ -152,46 +174,14 @@ Now you can skip the manual setup instructions and start executing the exercises
 
 > **Note:** Alternativelly, you could use the [Blob Service REST API](https://msdn.microsoft.com/en-us/library/azure/dd135733.aspx) to automate the files upload.
 
-<a name="ManualSetupSqlDW"></a>
-#### Manual Setup 3: Manually creating the SQL Data Warehouse ####
+<a name="ManualSetupSqlDWScript"></a>
+#### Manual Setup 4: Manually creating the tables and stored procedures in SQL Data Warehouse ####
 
-1. In the [Microsoft Azure portal](https://portal.azure.com/), create a new SQL Data Warehouse (_New > Data + Storage > SQL Data Warehouse_).
+Once that the SQL Data Warehouse is created, you need to create the tables and stored procedures that will be used in this module.
 
-1. Enter "**partsunlimited**" for the database name.
+1. Navigate to the SQL Data Warehouse you created previously.
 
-1. The minimun performance of 100 DWU will be enough for this module.
-
-1. Create a new SQL Server for hosting the Data Warehouse.
- 1. Select **Create a new server** in the Server blade.
- 1. Enter a globally unique name for the server.
- 1. Enter a admin login name: **dwadmin**
- 1. Write a password for the server login: **P@ssword123**
- 1. Repeat the password to confirm it.
- 1. Select the same location used for the other services.
-
-1. Use **Blank database** for the source so a new empty database is used (it will use the "partsunlimited" name).
-
-1. Select the resource group used for all the services: **DataCodeLab**.
-
-	![Create SQL Data Warehouse](Images/setup-create-dw.png?raw=true "SQL Data Warehouse")
-
-	_SQL Data Warehouse_
-
-1. Click **Create**.
-
-1. Once created, in the SQL Data Warehouse blade, click on the server name to open the Sql Server settings.
-
-1. Click "Show firewall settings".
-
-1. Click on "Add client IP" to add a rule to enable access for your machine.
-
-	![Firewall config](Images/setup-dw-firewall.png?raw=true "Firewall config")
-
-	_Firewall config_
-
-1. Click **Save**.
-
-1. In the SQL Data Warehouse blade, click **Open in Visual Studio**. In the new blade, click "Open in Visual Studio".
+1. In the _SQL Data Warehouse_ blade, click **Open in Visual Studio**. In the new blade, click **Open in Visual Studio**.
 
 	![Open Data Warehouse in Visual Studio](Images/setup-open-vs.png?raw=true "Open Data Warehouse in Visual Studio")
 
@@ -228,13 +218,41 @@ Now you can skip the manual setup instructions and start executing the exercises
 	GO
 	````
 
-1. Click execute button (Ctrl+Shift+E) to run the query.
+1. Click execute button (**Ctrl+Shift+E**) to run the query.
 
 	![Creating schema for Data Warehouse](Images/setup-run-sql.png?raw=true "Creating schema for Data Warehouse")
 
 	_Creating schema for Data Warehouse_
 
 1. Close Visual Studio. You don't need to save changes.
+
+<a name="SetupScript"></a>
+#### Automated setup using scripts ####
+
+Using the setup script you can fully setup the environment by creating the sample data, upload to storage, create HDI cluster and SQL Data Warehouse. You can skip all the tasks that you have performed manually.
+
+1. Open Windows Explorer and browse to the module's **Setup** folder.
+1. Right-click **Setup.cmd** and select **Run as Administrator** to launch the setup process.
+1. If the _User Account Control_ dialog box is shown, confirm the action to proceed.
+1. Select a setup operation from the menu. First generate the sample data files and then proceed with the next tasks in order.
+
+	![Setup menu](Images/setup-menu.png?raw=true "Setup menu")
+
+	_Setup menu_
+
+1. If prompted, log in with credentials where you have an available Azure subscription. You will be able to select one if you have multiple subscriptions.
+
+1. Complete the prompted values as requested on each setup step. **Take note of the account names, keys and passwords as they will be required for the exercises**. Also, the settings will be stored in .txt files inside the "Setup" folder.
+
+	The HDI cluster provisioning may take around 15 minutes. You can enter the [Microsoft Azure portal](https://portal.azure.com/) to check the status of the HDI cluster provisioning.
+
+	![HDI cluster in progress](Images/setup-inprogress-hdi.png?raw=true "HDI cluster in progress")
+
+	_HDI cluster in progress_
+
+> **Note:** to clean your subscription just delete the **DataCodeLab** resource group and all the associated resources.
+
+Now you start executing the exercises.
 
 ---
 
