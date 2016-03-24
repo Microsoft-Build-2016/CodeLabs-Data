@@ -526,18 +526,18 @@ In this task, you'll update the PartsUnlimited website to analyze the user feedb
 
 What if you could understand the emotion of your customers when they are using your product?
 
-As part of Microsoft Project Oxford, Face APIs provide state-of-the-art algorithms to process face images, like face detection with gender and age prediction, recognition, alignment and other application level features. (To learn more about [Face APIs](https://gallery.cortanaanalytics.com/MachineLearningAPI/b0b2598aa46c4f44a08af8891e415cc7))
+As part of Microsoft Cognitive Services (previously Project Oxford), Face APIs provide state-of-the-art algorithms to process face images, like face detection with gender and age prediction, recognition, alignment and other application level features. (To learn more about [Face APIs](https://microsoft.com/cognitive-services/en-us/face-api)
 
-Now that you've built your Retail website, you'll develop an app for a Retail Store kiosk and use the [Project Oxford Emotion API](https://www.projectoxford.ai/emotion) to identify emotions in the wild based on facial expressions that are universal.
+Now that you've built your Retail website, you'll develop an app for a Retail Store kiosk and use the [Cognitive Services Emotion API](https://microsoft.com/cognitive-services/en-us/emotion-api) to identify emotions in the wild based on facial expressions that are universal.
 
 In this exercise, you'll create a simple Universal Windows app (UWP) and integrate the Emotion API to recognize the emotions expressed by the faces in an image.
 
 <a name="Ex3Task1"></a>
 #### Task 1 - Subscribing to the Emotion API and get a subscription key ####
 
-In this task, you'll subscribe to Emotion API, which is part of the Microsoft Project Oxford services. See subscription and key management. Both the primary and secondary key can be used in this tutorial. Make sure to follow best practices for keeping your API key secret and secure.
+In this task, you'll subscribe to Emotion API, which is part of the Microsoft Cognitive services. See subscription and key management. Both the primary and secondary key can be used in this tutorial. Make sure to follow best practices for keeping your API key secret and secure.
 
-1. Go to [Project Oxford Subscription](https://www.projectoxford.ai/Subscription), sign in, accept the terms, and click the **Request New Keys** button on the right.
+1. Go to [Microsoft Cognitive Services Subscription](https://microsoft.com/cognitive-services/en-us/subscriptions), sign in, accept the terms, and click the **Request New Keys** button on the right.
 
 1. Make sure the **Emotion API - Free** is checked and click **Subscribe**.
 
