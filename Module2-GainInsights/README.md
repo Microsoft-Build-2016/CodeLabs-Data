@@ -725,7 +725,7 @@ In this task, you'll write a Hive query to generate product stats (views and car
 				 get_json_object(jsonentry, "$.category"),
 				 get_json_object(jsonentry, "$.type"),
 				 CAST(get_json_object(jsonentry, "$.total") as BIGINT)
-		FROM LogsRaw
+		FROM LogsRaw;
 		````
 
 		> **Note**: The CREATE EXTERNAL TABLE command that we used here, creates an external table, the data file can be located outside the default container and does not move the data file.
@@ -768,7 +768,7 @@ In this task, you'll write a Hive query to generate product stats (views and car
 				 get_json_object(jsonentry, "$.category"),
 				 get_json_object(jsonentry, "$.type"),
 				 CAST(get_json_object(jsonentry, "$.total") as BIGINT)
-		FROM LogsRaw
+		FROM LogsRaw;
 		````
 
 		> **Note**: The CREATE EXTERNAL TABLE command that we used here, creates an external table, the data file can be located outside the default container and does not move the data file.
