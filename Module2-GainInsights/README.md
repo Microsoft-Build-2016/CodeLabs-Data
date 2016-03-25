@@ -383,9 +383,9 @@ In this task, you'll create the linked services.
 
 1. Now, click **New compute** button on the toolbar and select **HDInsight cluster** from the drop down menu. You should see the JSON template for creating the *HDInsight cluster linked service* in the right pane.
 
-    **Note**: Alternatively, you can use a [On Demand HDInsight cluster](https://azure.microsoft.com/en-us/documentation/articles/data-factory-compute-linked-services/#azure-hdinsight-on-demand-linked-service), but it will take around 15 minutes to create the cluster when running the Data Factory. Use this approach only if the provided cluster is not available and make sure to specify the proper password.
+    > **Note**: Alternatively, you can use a [On Demand HDInsight cluster](https://azure.microsoft.com/en-us/documentation/articles/data-factory-compute-linked-services/#azure-hdinsight-on-demand-linked-service), but it will take around 15 minutes to create the cluster when running the Data Factory. Use this approach only if the provided cluster is not available and make sure to specify the proper password.
 
-1. Update the setting placeholders as shown in the snippet below. Replace the **<****hdiclustername****>** placeholder with the name you used when running the **Setup.cmd** script.
+1. Update the setting placeholders as shown in the snippet below. Replace the **<****hdiclustername****>** placeholder with the name you used when running the **Setup.cmd** script or with manual steps.
 
 	````JavaScript
 	{
@@ -409,7 +409,7 @@ In this task, you'll create the linked services.
 
 	_Linked services created_
 
-    **Note:** if the deployment fails, it may be due to the HDI cluster is still being provisioned. Verify the status in the portal.
+    > **Note:** if the deployment fails, it may be due to the HDI cluster is still being provisioned. Verify the status in the portal.
 
 <a name="Ex1Task3"></a>
 #### Task 3 - Creating the input and output datasets ####
@@ -728,7 +728,7 @@ In this task, you'll write a Hive query to generate product stats (views and car
 		FROM LogsRaw
 		````
 
-		 **Note**: The CREATE EXTERNAL TABLE command that we used here, creates an external table, the data file can be located outside the default container and does not move the data file.
+		> **Note**: The CREATE EXTERNAL TABLE command that we used here, creates an external table, the data file can be located outside the default container and does not move the data file.
 
 		![Hive editor](Images/ex2task1-hive-editor.png?raw=true "Hive editor")
 
@@ -771,7 +771,7 @@ In this task, you'll write a Hive query to generate product stats (views and car
 		FROM LogsRaw
 		````
 
-		 **Note**: The CREATE EXTERNAL TABLE command that we used here, creates an external table, the data file can be located outside the default container and does not move the data file.
+		> **Note**: The CREATE EXTERNAL TABLE command that we used here, creates an external table, the data file can be located outside the default container and does not move the data file.
 
 		![Hive editor](Images/ex2task1-ambari-hive-editor.png?raw=true "Hive editor")
 
@@ -832,15 +832,15 @@ In this task, you'll reuse the Hive query to generate the HQL script for the Hiv
 
 		_Attaching to external storage_
 
-	> **Note:** You can also add an Storage Account by login to your Azure accounts and pick storage accounts. To do this, click the settings button (the "wrench" symbol). 
+		> **Note:** You can also add an Storage Account by login to your Azure accounts and pick storage accounts. To do this, click the settings button (the "wrench" symbol). 
 
-	> ![Settings](Images/azure-storage-explorer-settings.png?raw=true "Settings")
+		> ![Settings](Images/azure-storage-explorer-settings.png?raw=true "Settings")
 
-	> _Settings_
+		> _Settings_
 
-	> ![Add an Account](Images/azure-storage-explorer-add-account.png?raw=true "Add an Account")
+		> ![Add an Account](Images/azure-storage-explorer-add-account.png?raw=true "Add an Account")
 
-	> _Add an Account_
+		> _Add an Account_
 
 	1. Enter the account name and key of the storage account you created/reused in the setup steps (leave the default endpoint options). Then click **OK** to add the account to Azure Explorer.
 
