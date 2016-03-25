@@ -166,6 +166,16 @@ In order to run the exercises in this module, you'll need to create an HDI clust
 
 1. Open the **Azure Storage Explorer** or the tool of your preference and configure a new storage account using the account name and key from the previous step. In _Azure Storage Explorer_, right-click on **Storage Accounts**, select **Attach External Storage...** and enter the account name and key in the dialog, then click **OK**.
 
+	> **Note:** You can also add an Storage Account by login to your Azure accounts and pick storage accounts. To do this, click the settings button (the "wrench" symbol). 
+
+	> ![Settings](Images/azure-storage-explorer-settings.png?raw=true "Settings")
+
+	> _Settings_
+
+	> ![Add an Account](Images/azure-storage-explorer-add-account.png?raw=true "Add an Account")
+
+	> _Add an Account_
+
 1. Create a new Blob Container with the name "**partsunlimited**" and "Container" access level. In _Azure Storage Explorer_ expand your account and right-click on **Blob Containers**, select **Create Blob Container** and enter "partsunlimited". Press enter to create the container. Then right-click on the new container and select **Set Public Access Level..** and choose **Public read access for container and blobs**.
 
 1. Copy the whole **Logs** folder (in _Setup\Assets_) into the **partsunlimited** container to upload all the data files. In _Azure Storage Explorer_, select the **partsunlimited** container, click **Upload** and choose **Upload folder**. In the _Upload folder_ dialog, select the **Logs** folder (from _Setup\Assets_) and then click **Upload**
@@ -814,13 +824,23 @@ In this task, you'll reuse the Hive query to generate the HQL script for the Hiv
 
     Notice this script is, essentially, the Hive query you wrote and tested in the previous task but it also includes an output table to store the results in tabular format (CSV).
 
-1. This script was already uploaded to your storage during the module setup by using the **Setup.cmd** script or manual steps. Verify the HQL script was uploaded by using the an storage explorer tool such as **Azure Storage Explorer** to navigate to the **Scripts** folder in the **partsunlimited** container.
+1. This script was already uploaded to your storage during the module setup by using the manual steps or the **Setup.cmd** script. Verify the HQL script was uploaded by using the an storage explorer tool such as **Azure Storage Explorer** to navigate to the **Scripts** folder in the **partsunlimited** container.
 
 	1. Open **Azure Storage Explorer**, right click on "Storage Account" tree item and select **Attach External Storage...**
 
 		![Attaching to external storage](Images/ex2task2-explorer-add-account.png?raw=true "Attaching to external storage")
 
 		_Attaching to external storage_
+
+	> **Note:** You can also add an Storage Account by login to your Azure accounts and pick storage accounts. To do this, click the settings button (the "wrench" symbol). 
+
+	> ![Settings](Images/azure-storage-explorer-settings.png?raw=true "Settings")
+
+	> _Settings_
+
+	> ![Add an Account](Images/azure-storage-explorer-add-account.png?raw=true "Add an Account")
+
+	> _Add an Account_
 
 	1. Enter the account name and key of the storage account you created/reused in the setup steps (leave the default endpoint options). Then click **OK** to add the account to Azure Explorer.
 
@@ -1094,18 +1114,6 @@ You can use the SQL Server Stored Procedure activity in a Data Factory pipeline 
 
 	_New pipeline output slices_
 
-1. Now that the data was processed by the stored procedure and populated the _ProductStats_ table, you can now pause the Data Warehouse. Navigate to the SQL Data Warehouse blade and click **Pause**.
-
-	![Pause SQL Data Warehouse](Images/ex3task4-pause-dw.png?raw=true "Pause SQL Data Warehouse")
-
-	_Pause SQL Data Warehouse_
-
-1. Confirm you want to pause the data warehouse.
-
-	Unique to SQL Data Warehouse is the ability to _pause_ and _resume_ compute on demand. If the team will not be using the Data Warehouse instance for a period of time, like nights, weekends, certain holidays or for any other reason, you can pause the Data Warehouse instance for that period of time and pick up where you left off when you return. 
-
-	> **Note:** Since storage is separate from compute, your storage is unaffected by pause and you can continue having access to it. For instance, using Power BI as you will do in next exercise.
-
 <a name="Exercise4"></a>
 ### Exercise 4: Using the data in the warehouse to generate Power BI visualizations ###
 
@@ -1140,6 +1148,21 @@ In this task, you'll open Power BI and connect to the SQL Data Warehouse from th
 	_Server credentials_
 
 1. Once the connection is made, the partsunlimited dataset will appear on the left blade.
+
+<a name="Ex4Task2"></a>
+#### Task 2 - Create Reports in Power BI ####
+
+1. Now that the data was processed by the stored procedure and populated the _ProductStats_ table, you can now pause the Data Warehouse. Navigate to the SQL Data Warehouse blade and click **Pause**.
+
+	![Pause SQL Data Warehouse](Images/ex3task4-pause-dw.png?raw=true "Pause SQL Data Warehouse")
+
+	_Pause SQL Data Warehouse_
+
+1. Confirm you want to pause the data warehouse.
+
+	Unique to SQL Data Warehouse is the ability to _pause_ and _resume_ compute on demand. If the team will not be using the Data Warehouse instance for a period of time, like nights, weekends, certain holidays or for any other reason, you can pause the Data Warehouse instance for that period of time and pick up where you left off when you return. 
+
+	> **Note:** Since storage is separate from compute, your storage is unaffected by pause and you can continue having access to it. For instance, using Power BI as you will do in next exercise.
 
 <a name="Ex4Task2"></a>
 #### Task 2 - Create Reports in Power BI ####
