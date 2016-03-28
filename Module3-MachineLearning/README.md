@@ -138,9 +138,11 @@ In this task, you have two alternatives to create the recommendations model. You
 
 You can also set up your model using the [Recommendations UI (Beta)](http://recommendations.azurewebsites.net/) and following three simple steps:
 
-1. Add a Catalog file: use the **catalog_small.txt** one within the **Resources** folder.
+1. In the [Recommendations UI](http://recommendations.azurewebsites.net/) site, provide a name for the model and then click **Add Project**.
 
-1. Add a Usage file: use the **usage_data.txt** one within the **Resources** folder.
+1. Add a Catalog file: use the **catalog_small.txt** one within the **Resources** folder located at **Source / Ex1 / Begin / RecommendationsSample**.
+
+1. Add a Usage file: use the **usage_data.txt** one within the **Resources** folder located at **Source / Ex1 / Begin / RecommendationsSample**.
 
 1. Create a build: we created a **Recommendation** build type.
 
