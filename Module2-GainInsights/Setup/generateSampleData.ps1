@@ -25,7 +25,7 @@ $prods = @(
 )
 
 for($d = 0; $d -lt $daysCount; $d++) {
-	$folder = "Assets\Logs\$(Get-Date (Get-Date).AddDays(-$d) -f yyyy\\MM\\dd)";
+	$folder = "Assets\logs\$(Get-Date (Get-Date).AddDays(-$d) -f yyyy\\MM\\dd)";
 	Write-Host "Creating folder $folder..."
 	New-Item -ItemType directory -Path $folder -Force
 	
