@@ -57,7 +57,7 @@ In order to run the exercises in this module, you'll need to create an HDI clust
 	- **Storm**: for real time event processing workloads
 	- **Spark**: for in-memory processing, interactive queries, stream, and machines learning workloads.
 
-1. Select an operating system for the cluster (you can choose between either Windows or Linux) and use the latest version ("Hadoop 2.7.0 (HDI 3.3)" or latest)
+1. Select an _operating system_ for the cluster (you can choose between either Windows or Linux) and **use the latest version** ("Hadoop 2.7.0 (HDI 3.3)" or latest)
 
 1. Select the same Resource Group as the used for the Storage account ("**DataCodeLab**").
 
@@ -722,7 +722,7 @@ In this task, you'll write a Hive query to generate product stats (views and car
 		CREATE EXTERNAL TABLE LogsRaw (jsonentry string) 
 		STORED AS TEXTFILE LOCATION "wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/logs/2016/03/30";
 
-		ALTER TABLE LogsRaw ADD IF NOT EXISTS PARTITION (year=2016, month=03, day=27) LOCATION 'wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/logs/2016/03/30';
+		ALTER TABLE LogsRaw ADD IF NOT EXISTS PARTITION (year=2016, month=03, day=30) LOCATION 'wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/logs/2016/03/30';
 
 		SELECT CAST(get_json_object(jsonentry, "$.productid") as BIGINT),
 				 get_json_object(jsonentry, "$.title"),
@@ -767,7 +767,7 @@ In this task, you'll write a Hive query to generate product stats (views and car
 		CREATE EXTERNAL TABLE LogsRaw (jsonentry string) 
 		STORED AS TEXTFILE LOCATION "wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/logs/2016/03/30";
 
-		ALTER TABLE LogsRaw ADD IF NOT EXISTS PARTITION (year=2016, month=03, day=27) LOCATION 'wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/logs/2016/03/30';
+		ALTER TABLE LogsRaw ADD IF NOT EXISTS PARTITION (year=2016, month=03, day=30) LOCATION 'wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/logs/2016/03/30';
 
 		SELECT CAST(get_json_object(jsonentry, "$.productid") as BIGINT),
 				 get_json_object(jsonentry, "$.title"),
@@ -908,7 +908,7 @@ In this task, you'll create the pipeline to generate the stats output using a _H
 				  "scriptPath": "partsunlimited\\Scripts\\addpartitions.hql",
 				  "scriptLinkedService": "AzureStorageLinkedService",
 					 "defines": {
-					"StorageAccountName": "<StorageAccountName>",
+							 "StorageAccountName": "<StorageAccountName>",
 							 "Year": "$$Text.Format('{0:yyyy}', SliceStart)",
 							 "Month": "$$Text.Format('{0:MM}', SliceStart)",
 							 "Day": "$$Text.Format('{0:dd}', SliceStart)"
