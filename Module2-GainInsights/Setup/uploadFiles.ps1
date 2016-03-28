@@ -1,6 +1,7 @@
 $resourceGroupName = 'DataCodeLab' # default resource group name to create the resources
 $location = 'West US' # default location to created the resources
 $logsContainer = 'partsunlimited' # container where the sample log files and HQL script will be uploaded (container is created by this script)
+$statsContainer = 'processeddata' # container where the processed data will be stored (container is created by this script)
 $dataFolder = 'Assets' # folder where are the files to be uploaded to the storage
 # Note: other parameters will be prompted to the user
 
@@ -90,6 +91,9 @@ $storageContext = New-AzureStorageContext -StorageAccountName $storageAccountNam
 Write-Host "Creating container for logs..."
 New-AzureStorageContainer -Name $logsContainer -Context $storageContext -Permission Container
 
+Write-Host "Creating container for results..."
+New-AzureStorageContainer -Name $statsContainer -Context $storageContext -Permission Container
+
 Write-Host "Uploading files..."
 
 $paths = Get-ChildItem $dataFolder -Recurse -File -Name 
@@ -105,7 +109,8 @@ UploadFiles.ps1 run date: $(Get-Date)`r
 Connection string: DefaultEndpointsProtocol=https;AccountName=$storageAccountName;AccountKey=$storageAccountKey`r
 Account name: $storageAccountName`r
 Account key: $storageAccountKey`r
-Logs container: $logsContainer
+Logs container: $logsContainer`r
+Processed data container: $statsContainer
 "@ | Set-Content Settings_Storage.txt
 
 ###### Display used settings ######

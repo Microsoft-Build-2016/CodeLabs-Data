@@ -57,7 +57,7 @@ In order to run the exercises in this module, you'll need to create an HDI clust
 	- **Storm**: for real time event processing workloads
 	- **Spark**: for in-memory processing, interactive queries, stream, and machines learning workloads.
 
-1. Select an operating system for the cluster (you can choose between either Windows or Linux) and use the latest version ("Hadoop 2.7.0 (HDI 3.3)" or latest)
+1. Select an _operating system_ for the cluster (you can choose between either Windows or Linux) and **use the latest version** ("Hadoop 2.7.0 (HDI 3.3)" or latest)
 
 1. Select the same Resource Group as the used for the Storage account ("**DataCodeLab**").
 
@@ -144,12 +144,12 @@ In order to run the exercises in this module, you'll need to create an HDI clust
 
 1. Open Windows Explorer and browse to the module's **Setup** folder.
 
-1. Right-click **GenerateData.cmd** and select **Run as Administrator** to generate the sample data files and exit the script. The files will be generated in **Setup\Assets\Logs** using date partitioned folders.
+1. Right-click **GenerateData.cmd** and select **Run as Administrator** to generate the sample data files and exit the script. The files will be generated in **Setup\Assets\logs** using date partitioned folders.
 
 	> **Note:** Azure Data Factory supports partitioned data. You can specify a dynamic folder path and file name for time series data with the "partitionedBy" section when defining the pipeline activities, also using Data Factory macros and the system variables: SliceStart and SliceEnd, which indicate start and end times for a given data slice. For example:
 	> 
 	> ````JavaScript
-		"folderPath": "partsunlimited/Logs/{Year}/{Month}/{Day}",
+		"folderPath": "partsunlimited/logs/{Year}/{Month}/{Day}",
 		"partitionedBy": 
 		 [
 			 { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },
@@ -178,9 +178,11 @@ In order to run the exercises in this module, you'll need to create an HDI clust
 
 1. Create a new Blob Container with the name "**partsunlimited**" and "Container" access level. In _Azure Storage Explorer_ expand your account and right-click on **Blob Containers**, select **Create Blob Container** and enter "partsunlimited". Press enter to create the container. Then right-click on the new container and select **Set Public Access Level..** and choose **Public read access for container and blobs**.
 
-1. Copy the whole **Logs** folder (in _Setup\Assets_) into the **partsunlimited** container to upload all the data files. In _Azure Storage Explorer_, select the **partsunlimited** container, click **Upload** and choose **Upload folder**. In the _Upload folder_ dialog, select the **Logs** folder (from _Setup\Assets_) and then click **Upload**
+1. Copy the whole **logs** folder (in _Setup\Assets_) into the **partsunlimited** container to upload all the data files. In _Azure Storage Explorer_, select the **partsunlimited** container, click **Upload** and choose **Upload folder**. In the _Upload folder_ dialog, select the **logs** folder (from _Setup\Assets_) and then click **Upload**
 
 1. Repeat to upload the **Scripts** folder.
+
+1. Create another Blob Container with the name "**processeddata**" and use "Container" access level. This container will be used to store the result from the HDI processing.
 
 > **Note:** Alternativelly, you could use the [Blob Service REST API](https://msdn.microsoft.com/en-us/library/azure/dd135733.aspx) to automate the files upload.
 
@@ -426,7 +428,7 @@ In this task, you'll create the input and output tables corresponding to the lin
 
 	````JavaScript
 	"typeProperties": {
-		"folderPath": "partsunlimited/Logs/{Year}/{Month}/{Day}",
+		"folderPath": "partsunlimited/logs/{Year}/{Month}/{Day}",
 		"partitionedBy": 
 		[
 			 { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },
@@ -463,7 +465,7 @@ In this task, you'll create the input and output tables corresponding to the lin
 			"type": "AzureBlob",
 			"linkedServiceName": "AzureStorageLinkedService",
 			"typeProperties": {
-				"folderPath": "partsunlimited/Logs/{Year}/{Month}/{Day}",
+				"folderPath": "partsunlimited/logs/{Year}/{Month}/{Day}",
 				"partitionedBy": 
 				[
 					 { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },
@@ -520,7 +522,7 @@ In this task, you'll create the input and output tables corresponding to the lin
 
 		````JavaScript
 		"typeProperties": {
-			"folderPath": "partsunlimited/Stats/{Year}/{Month}/{Day}",
+			"folderPath": "processeddata/logs/{Year}/{Month}/{Day}",
 			"partitionedBy": 
 			[
 				 { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },
@@ -573,7 +575,7 @@ In this task, you'll create the input and output tables corresponding to the lin
 					}
 				],
 				"typeProperties": {
-					"folderPath": "partsunlimited/Stats/{Year}/{Month}/{Day}",
+					"folderPath": "processeddata/logs/{Year}/{Month}/{Day}",
 					"partitionedBy": 
 					[
 						 { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },
@@ -713,12 +715,14 @@ In this task, you'll write a Hive query to generate product stats (views and car
 
 	1. Open the **Hive Editor** using the link in the top bar if the HDI cluster is running _Windows_. 
 
-	1. Write HQL code to create a table from the existing blobs and parse the JSON format. Replace the **StorageAccountName**, update the folder to be valid (where the input logs were uploaded according to the current date) and paste the snippet below:
+	1. Write HQL code to create a partitioned table for the existing blobs and then parse the JSON format. Paste the snippet below, replace the **<****StorageAccountName****>** and update the partition to be of a valid date and location (where the input logs were uploaded according to the current date):
 
-		````
+		````SQL
 		DROP TABLE IF EXISTS LogsRaw;
 		CREATE EXTERNAL TABLE LogsRaw (jsonentry string) 
-		STORED AS TEXTFILE LOCATION "wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/Logs/2016/03/30";
+		STORED AS TEXTFILE LOCATION "wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/logs/2016/03/30";
+
+		ALTER TABLE LogsRaw ADD IF NOT EXISTS PARTITION (year=2016, month=03, day=30) LOCATION 'wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/logs/2016/03/30';
 
 		SELECT CAST(get_json_object(jsonentry, "$.productid") as BIGINT),
 				 get_json_object(jsonentry, "$.title"),
@@ -756,12 +760,14 @@ In this task, you'll write a Hive query to generate product stats (views and car
 
 		_Hive view option in Ambari_
 
-	1. In the new worksheet, write HQL code to create a table from the existing blobs and parse the JSON format. Replace the **StorageAccountName**, update the folder to be valid (where the input logs were uploaded according to the current date) and paste the snippet below:
+	1. In the new worksheet, write HQL code to create a partitioned table for the existing blobs and then parse the JSON format. Paste the snippet below, replace the **<****StorageAccountName****>** and update the partition to be of a valid date and location (where the input logs were uploaded according to the current date):
 
-		````
+		````SQL
 		DROP TABLE IF EXISTS LogsRaw;
 		CREATE EXTERNAL TABLE LogsRaw (jsonentry string) 
-		STORED AS TEXTFILE LOCATION "wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/Logs/2016/03/30";
+		STORED AS TEXTFILE LOCATION "wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/logs/2016/03/30";
+
+		ALTER TABLE LogsRaw ADD IF NOT EXISTS PARTITION (year=2016, month=03, day=30) LOCATION 'wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/logs/2016/03/30';
 
 		SELECT CAST(get_json_object(jsonentry, "$.productid") as BIGINT),
 				 get_json_object(jsonentry, "$.title"),
@@ -787,6 +793,23 @@ In this task, you'll write a Hive query to generate product stats (views and car
 
 	> **Note:** Ambari portal offers many features over the Windows dashboard. You can create advanced visualization of the data results using charts, customize the Hive settings, create customized views, among many other options. To learn more about Ambari portal go to [Manage HDInsight clusters by using the Ambari Web UI](https://azure.microsoft.com/documentation/articles/hdinsight-hadoop-manage-ambari/).
 
+1. Write a new Hive query to create the output partitioned table using a columns schema matching the output of the previous query. Paste the snippet below and replace the **StorageAccountName** placeholder.
+
+	````SQL
+	DROP TABLE IF EXISTS OutputTable;
+	CREATE EXTERNAL TABLE OutputTable (
+		productid int,
+		title string,
+		category string,
+		type string,
+		totalClicked int
+	) PARTITIONED BY (year int, month int, day int) 
+	ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'
+	STORED AS TEXTFILE LOCATION 'wasb://processeddata@<StorageAccountName>.blob.core.windows.net/logs';
+	````
+
+1. **Submit** or **execute** the Hive query to create the output table.
+
 <a name="Ex2Task2"></a>
 #### Task 2 - Create the HQL script for the Hive Activity ####
 
@@ -794,37 +817,29 @@ In this task, you'll reuse the Hive query to generate the HQL script for the Hiv
 
 1. Open the file located in **Setup\Assets\Scripts\logstocsv.hql** and review its content:
 
-	````
-	DROP TABLE IF EXISTS LogsRaw;
-	CREATE EXTERNAL TABLE LogsRaw (jsonentry string) 
-	STORED AS TEXTFILE LOCATION "${hiveconf:inputjson}";
-
-	DROP TABLE IF EXISTS OutputTable;
-	CREATE EXTERNAL TABLE OutputTable
-	(
-		 productid       int,
-		 title           string,
-		 category        string,
-		 type            string,
-		 total            int
-	)
-	ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-	LINES TERMINATED BY '10'
-	STORED AS TEXTFILE LOCATION '${hiveconf:outputcsv}'
-	TBLPROPERTIES("skip.header.line.count"="1");
-
-	INSERT OVERWRITE TABLE OutputTable
-	SELECT CAST(get_json_object(jsonentry, "$.productid") as BIGINT) as productid,
-				get_json_object(jsonentry, "$.title") as title,
-				get_json_object(jsonentry, "$.category") as category,
-				get_json_object(jsonentry, "$.type") as type,
-				CAST(get_json_object(jsonentry, "$.total") as BIGINT) as total
-	FROM LogsRaw
+	````SQL
+	INSERT OVERWRITE TABLE OutputTable Partition (year=${hiveconf:Year}, month=${hiveconf:Month}, day=${hiveconf:Day})
+SELECT CAST(get_json_object(jsonentry, "$.productid") as BIGINT) as productid,
+         get_json_object(jsonentry, "$.title") as title,
+         get_json_object(jsonentry, "$.category") as category,
+         get_json_object(jsonentry, "$.type") as type,
+         CAST(get_json_object(jsonentry, "$.total") as BIGINT) as total
+FROM LogsRaw
 	````
 
-    Notice this script is, essentially, the Hive query you wrote and tested in the previous task but it also includes an output table to store the results in tabular format (CSV).
+    Notice this script is, essentially, the Hive query you wrote and tested in the previous task but it insert the results in the output table.
 
-1. This script was already uploaded to your storage during the module setup by using the manual steps or the **Setup.cmd** script. Verify the HQL script was uploaded by using the an storage explorer tool such as **Azure Storage Explorer** to navigate to the **Scripts** folder in the **partsunlimited** container.
+1. Open the file located in **Setup\Assets\Scripts\addpartitions.hql** and review its content:
+
+	````SQL
+	ALTER TABLE LogsRaw ADD IF NOT EXISTS PARTITION (year=${hiveconf:Year}, month=${hiveconf:Month}, day=${hiveconf:Day}) LOCATION 'wasb://partsunlimited@${hiveconf:StorageAccountName}.blob.core.windows.net/logs/${hiveconf:Year}/${hiveconf:Month}/${hiveconf:Day}';
+
+	ALTER TABLE OutputTable ADD IF NOT EXISTS PARTITION (year=${hiveconf:Year}, month=${hiveconf:Month}, day=${hiveconf:Day}) LOCATION 'wasb://processeddata@${hiveconf:StorageAccountName}.blob.core.windows.net/logs/${hiveconf:Year}/${hiveconf:Month}/${hiveconf:Day}';
+	````
+
+    This script adds the partitiones by date to the input and output tables. The storage account name and all the required date components for the partitiones will be passed as parameters by the Hive action running in the Data Factory.
+
+1. These script was already uploaded to your storage during the module setup by using the manual steps or the **Setup.cmd** script. Verify the HQL script was uploaded by using the an storage explorer tool such as **Azure Storage Explorer** to navigate to the **Scripts** folder in the **partsunlimited** container.
 
 	1. Open **Azure Storage Explorer**, right click on "Storage Account" tree item and select **Attach External Storage...**
 
@@ -873,6 +888,30 @@ In this task, you'll create the pipeline to generate the stats output using a _H
 
 1. Go back to the Azure Portal and open the **Data Factory**.
 
+1. In the **Author and Deploy** blade of the Data Factory, click **New dataset** button on the toolbar and select **Azure Blob Storage**. We will create a dummy dataset for the Hive activity that runs the addpartitions.hql script that does not requires any input/output dataset in the data factory.
+
+1. Update the dataset JSON to the following snippet and click **Deploy** to create the dummy dataset.
+
+	````JavaScript
+	{
+		 "name": "DummyDataset",
+		 "properties": {
+			  "type": "AzureBlob",
+			  "linkedServiceName": "AzureStorageLinkedService",
+			  "typeProperties": {
+					"folderPath": "dummy",
+					"format": {
+						 "type": "TextFormat"
+					}
+			  },
+			  "availability": {
+					"frequency": "Day",
+					"interval": 1
+			  }
+		 }
+	}
+	````
+
 1. In the **Author and Deploy** blade of the Data Factory, click **New pipeline** button on the toolbar (click ellipsis button if you don't see the New pipeline button).
 
 1. Change the **name** to "JsonLogsToTabularPipeline" and set the description to "Create tabular data using Hive".
@@ -881,32 +920,70 @@ In this task, you'll create the pipeline to generate the stats output using a _H
 
 1. Set the **end** date to be tomorrow.
 
-1. Add a Hive activity to run the "logstocsv.hql" script located in the storage at "partsunlimited\Scripts\logtostats.hql" and pass the input (logs folder) and output (CSV folder) paths as parameters for the script. Make sure to replace the **<****StorageAccountName****>** placeholder with the storage account name:
+1. Add a Hive activity to run the "addpartitions.hql" script located in the storage at "partsunlimited\Scripts\addpartitions.hql" and pass the slice date components as parameters. Make sure to replace the **<****StorageAccountName****>** placeholder with the storage account name:
 
 	````JavaScript
 	"activities": [
 		{
-			"name": "LogsToCsvHiveActivity",
-			"type": "HDInsightHive",
-			"linkedServiceName": "HDInsightLinkedService",
-			"typeProperties": {
-				"scriptPath": "partsunlimited\\Scripts\\logstocsv.hql",
-				"scriptLinkedService": "AzureStorageLinkedService",
+			 "name": "CreatePartitionHiveActivity",
+			 "type": "HDInsightHive",
+			 "linkedServiceName": "HDInsightLinkedService",
+			 "typeProperties": {
+				  "scriptPath": "partsunlimited\\Scripts\\addpartitions.hql",
+				  "scriptLinkedService": "AzureStorageLinkedService",
 				  "defines": {
-						"inputjson": "$$Text.Format('wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/Logs/{0:yyyy}/{0:MM}/{0:dd}/', SliceStart)",
-						"outputcsv": "$$Text.Format('wasb://partsunlimited@<StorageAccountName>.blob.core.windows.net/Stats/{0:yyyy}/{0:MM}/{0:dd}/', SliceStart)"
+				      "StorageAccountName": "<StorageAccountName>",
+				      "Year": "$$Text.Format('{0:yyyy}', SliceStart)",
+				      "Month": "$$Text.Format('{0:MM}', SliceStart)",
+				      "Day": "$$Text.Format('{0:dd}', SliceStart)"
 				  }
-			},
-			"inputs": [
+			 },
+			 "inputs": [
 				{ "name": "LogJsonFromBlob" }
-			],
-			"outputs": [
-				{ "name": "LogCsvFromBlob" }
-			],
-			"scheduler": {
-				"frequency": "Day",
-				"interval": 1
-			}
+			 ],
+			 "outputs": [
+				{ "name": "DummyDataset" }
+			 ],
+			 "scheduler": {
+				  "frequency": "Day",
+				  "interval": 1
+			 }
+		}
+	],
+	````
+
+	This activity will run the **addpartitions.hql** script to create the date partition corresponding to the current slice.
+
+1. Add another Hive activity to run the "logstocsv.hql" script located in the storage at "partsunlimited\Scripts\logtostats.hql" and pass the slice date components as parameters:
+
+	````JavaScript
+	"activities": [
+		{
+			 //...
+		},
+		{
+			 "name": "ProcessDataHiveActivity",
+			 "type": "HDInsightHive",
+			 "linkedServiceName": "HDInsightLinkedService",
+			 "typeProperties": {
+				  "scriptPath": "partsunlimited\\Scripts\\logstocsv.hql",
+				  "scriptLinkedService": "AzureStorageLinkedService",
+				  "defines": {
+				      "Year": "$$Text.Format('{0:yyyy}', SliceStart)",
+				      "Month": "$$Text.Format('{0:MM}', SliceStart)",
+				      "Day": "$$Text.Format('{0:dd}', SliceStart)"
+				  }
+			 },
+			 "inputs": [
+				  { "name": "LogJsonFromBlob" }
+			 ],
+			 "outputs": [
+				  { "name": "LogCsvFromBlob" }
+			 ],
+			 "scheduler": {
+				  "frequency": "Day",
+				  "interval": 1
+			 }
 		}
 	],
 	````

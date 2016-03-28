@@ -4,7 +4,7 @@
         "type": "AzureBlob",
         "linkedServiceName": "AzureStorageLinkedService",
         "typeProperties": {
-            "folderPath": "partsunlimited/Logs/{Year}/{Month}/{Day}",
+            "folderPath": "partsunlimited/logs/{Year}/{Month}/{Day}",
             "partitionedBy": 
             [
                  { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },

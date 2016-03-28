@@ -26,7 +26,7 @@
             }
         ],
         "typeProperties": {
-            "folderPath": "partsunlimited/Stats/{Year}/{Month}/{Day}",
+            "folderPath": "processeddata/logs/{Year}/{Month}/{Day}",
             "partitionedBy": 
             [
                  { "name": "Year", "value": { "type": "DateTime", "date": "SliceStart", "format": "yyyy" } },
