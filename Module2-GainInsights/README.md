@@ -938,6 +938,9 @@ In this task, you'll create the pipeline to generate the stats output using a _H
 				      "Day": "$$Text.Format('{0:dd}', SliceStart)"
 				  }
 			 },
+			 "inputs": [
+				{ "name": "LogJsonFromBlob" }
+			 ],
 			 "outputs": [
 				{ "name": "DummyDataset" }
 			 ],

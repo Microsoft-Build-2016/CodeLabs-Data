@@ -17,6 +17,9 @@
                             "Day": "$$Text.Format('{0:dd}', SliceStart)"
                       }
                 },
+                "inputs": [
+                    { "name": "LogJsonFromBlob" }
+                ],
                 "outputs": [
                     { "name": "DummyDataset" }
                 ],
