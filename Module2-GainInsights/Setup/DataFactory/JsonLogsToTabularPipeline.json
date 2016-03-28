@@ -17,6 +17,9 @@
                             "Day": "$$Text.Format('{0:dd}', SliceStart)"
                       }
                 },
+                "outputs": [
+                    { "name": "DummyDataset" }
+                ],
                 "scheduler": {
                     "frequency": "Day",
                     "interval": 1

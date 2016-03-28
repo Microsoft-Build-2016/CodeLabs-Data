@@ -715,7 +715,7 @@ In this task, you'll write a Hive query to generate product stats (views and car
 
 	1. Open the **Hive Editor** using the link in the top bar if the HDI cluster is running _Windows_. 
 
-	1. Write HQL code to create a partitioned table for the existing blobs and then parse the JSON format. Paste the snippet below, replace the **StorageAccountName** and update the partition to be of a valid date and location (where the input logs were uploaded according to the current date):
+	1. Write HQL code to create a partitioned table for the existing blobs and then parse the JSON format. Paste the snippet below, replace the **<****StorageAccountName****>** and update the partition to be of a valid date and location (where the input logs were uploaded according to the current date):
 
 		````SQL
 		DROP TABLE IF EXISTS LogsRaw;
@@ -760,7 +760,7 @@ In this task, you'll write a Hive query to generate product stats (views and car
 
 		_Hive view option in Ambari_
 
-	1. In the new worksheet, write HQL code to create a partitioned table for the existing blobs and then parse the JSON format. Paste the snippet below, replace the **StorageAccountName** and update the partition to be of a valid date and location (where the input logs were uploaded according to the current date):
+	1. In the new worksheet, write HQL code to create a partitioned table for the existing blobs and then parse the JSON format. Paste the snippet below, replace the **<****StorageAccountName****>** and update the partition to be of a valid date and location (where the input logs were uploaded according to the current date):
 
 		````SQL
 		DROP TABLE IF EXISTS LogsRaw;
@@ -888,6 +888,30 @@ In this task, you'll create the pipeline to generate the stats output using a _H
 
 1. Go back to the Azure Portal and open the **Data Factory**.
 
+1. In the **Author and Deploy** blade of the Data Factory, click **New dataset** button on the toolbar and select **Azure Blob Storage**. We will create a dummy dataset for the Hive activity that runs the addpartitions.hql script that does not requires any input/output dataset in the data factory.
+
+1. Update the dataset JSON to the following snippet and click **Deploy** to create the dummy dataset.
+
+	````JavaScript
+	{
+		 "name": "DummyDataset",
+		 "properties": {
+			  "type": "AzureBlob",
+			  "linkedServiceName": "AzureStorageLinkedService",
+			  "typeProperties": {
+					"folderPath": "dummy",
+					"format": {
+						 "type": "TextFormat"
+					}
+			  },
+			  "availability": {
+					"frequency": "Day",
+					"interval": 1
+			  }
+		 }
+	}
+	````
+
 1. In the **Author and Deploy** blade of the Data Factory, click **New pipeline** button on the toolbar (click ellipsis button if you don't see the New pipeline button).
 
 1. Change the **name** to "JsonLogsToTabularPipeline" and set the description to "Create tabular data using Hive".
@@ -907,13 +931,16 @@ In this task, you'll create the pipeline to generate the stats output using a _H
 			 "typeProperties": {
 				  "scriptPath": "partsunlimited\\Scripts\\addpartitions.hql",
 				  "scriptLinkedService": "AzureStorageLinkedService",
-					 "defines": {
-							 "StorageAccountName": "<StorageAccountName>",
-							 "Year": "$$Text.Format('{0:yyyy}', SliceStart)",
-							 "Month": "$$Text.Format('{0:MM}', SliceStart)",
-							 "Day": "$$Text.Format('{0:dd}', SliceStart)"
-					 }
+				  "defines": {
+				      "StorageAccountName": "<StorageAccountName>",
+				      "Year": "$$Text.Format('{0:yyyy}', SliceStart)",
+				      "Month": "$$Text.Format('{0:MM}', SliceStart)",
+				      "Day": "$$Text.Format('{0:dd}', SliceStart)"
+				  }
 			 },
+			 "outputs": [
+				{ "name": "DummyDataset" }
+			 ],
 			 "scheduler": {
 				  "frequency": "Day",
 				  "interval": 1
@@ -922,7 +949,7 @@ In this task, you'll create the pipeline to generate the stats output using a _H
 	],
 	````
 
-	This activity will run the **addpartitiones.hql** script to create the date partition corresponding to the current slice.
+	This activity will run the **addpartitions.hql** script to create the date partition corresponding to the current slice.
 
 1. Add another Hive activity to run the "logstocsv.hql" script located in the storage at "partsunlimited\Scripts\logtostats.hql" and pass the slice date components as parameters:
 
@@ -938,11 +965,11 @@ In this task, you'll create the pipeline to generate the stats output using a _H
 			 "typeProperties": {
 				  "scriptPath": "partsunlimited\\Scripts\\logstocsv.hql",
 				  "scriptLinkedService": "AzureStorageLinkedService",
-					 "defines": {
-							 "Year": "$$Text.Format('{0:yyyy}', SliceStart)",
-							 "Month": "$$Text.Format('{0:MM}', SliceStart)",
-							 "Day": "$$Text.Format('{0:dd}', SliceStart)"
-					 }
+				  "defines": {
+				      "Year": "$$Text.Format('{0:yyyy}', SliceStart)",
+				      "Month": "$$Text.Format('{0:MM}', SliceStart)",
+				      "Day": "$$Text.Format('{0:dd}', SliceStart)"
+				  }
 			 },
 			 "inputs": [
 				  { "name": "LogJsonFromBlob" }
