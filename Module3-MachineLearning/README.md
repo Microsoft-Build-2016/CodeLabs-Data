@@ -571,9 +571,9 @@ The emotions detected are anger, contempt, disgust, fear, happiness, neutral, sa
 
 1. In the NuGet Package Manager window, search for **Microsoft.ProjectOxford.Emotion** and install it.
 
-	![Project Oxford Emotion API](Images/emotion-api-nuget.png?raw=true "Project Oxford Emotion API")
+	![Microsoft Cognitive Services Emotion API](Images/emotion-api-nuget.png?raw=true "Microsoft Cognitive Services API")
 
-	_Project Oxford Emotion API_
+	_Microsoft Cognitive Services API_
 
 1. From the Solution Explorer, select the **Package.appxmanifest** file. In the **Capabilities** tab, check **Webcam**.
 
@@ -752,9 +752,9 @@ The emotions detected are anger, contempt, disgust, fear, happiness, neutral, sa
 
 	_Running the UWP app_
 
-### Project Oxford APIs ###
+### Microsoft Cognitive Services APIs ###
 
-In addition to the [Emotion API](https://www.projectoxford.ai/emotion) you can also build your own solutions with any language or development platform.
+In addition to the [Emotion API](https://www.microsoft.com/cognitive-services/en-us/emotion-api) you can also build your own solutions with any language or development platform. Some examples of the APIs are:
 
 #### Vision ####
 - [Computer Vision API](https://www.projectoxford.ai/vision): Understand images and generate thumbnails
