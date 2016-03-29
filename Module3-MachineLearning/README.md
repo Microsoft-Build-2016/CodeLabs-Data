@@ -103,6 +103,27 @@ In this task, you'll sign up for the Recommendations API service, and create a r
 <a name="Ex1Task2"></a>
 #### Task 2 - Creating a recommendations model ####
 
+**Note:** If you did not complete tasks 1, you may use the following account information to continue the exercise:
+
+|Account            |   API Key 
+|-------------------|-------------------
+| msbuild2016a@outlook.com | rkEVmRRVZMr2qrabbjkUJ+L0xOJrpYmuCCHkaCLWSFo
+| msbuild2016b@outlook.com | b8zlkjoEZuu3j9t3IY6dQmBI/CEzwieKmpkTGpiDYaU
+| msbuild2016c@outlook.com | Sl9CEorkLMlygauAzH84ywYnpyA4QXPuf3GeA+dMc+c
+| msbuild2016d@outlook.com  | wnwBVkXBtQOMIsgH6tFNr/Y3hzXbYlvtmDMXuploDRw
+| msbuild2016e@outlook.com  | 6nEF6cb7EH7mWwxFZ09h+YQBaMjac4fnWFeYQD2YX+0
+| msbuild2016f@outlook.com |  lHYQfBQTRbLCnQI3Cl/7cESt+59cwfw5LK03nPXq96c
+| msbuild2016g@outlook.com | SWKry3f56rl7dhR+dO1djw7u6JO7GaHbjcPkce3TV70
+| msbuild2016h@outlook.com | Po9vQpZo2MipUwGuNbuYXvSmBS3kI/gv13tvk5ukQFg
+| msbuild2016i@outlook.com | QeBR3r66lg9ydt3vOdYhlGYmSddco6heuXRlj18pv6w
+| msbuild2016j@outlook.com | wyzAlOoVkm3zSLAjnaEjiUtbZgc5bbxEcHuYdD3AWNA
+| msbuild2016m@outlook.com | eTrjrXRCIlc88hMTuuOKxQNXg6igeqtmj+XmgPocaTc
+| msbuild2016p@outlook.com | ca7W7d6751UQ6LJH6EISJZDpFSW8vinQM8M9SpheKLE
+| msbuild2016s@outlook.com | 8OuwzTTdF3Xjh0JrKAR6Wqve7uv8ESo9lDR1lpZuRqM
+| msbuild2016t@outlook.com | 36zHNj4TJD5PABWPz5+fm0xkcY1stHXwXmKAcK4V6d0
+| msbuild2016u@outlook.com | LQDulWPordHQBOErEuM64pkHKPpzn8lAe1Lr4JRshtY
+ 
+
 As mentioned, a Machine Learning Recommendations API was created using Azure Machine Learning by the data scientists at Microsoft.
 
 Now you, as a developer can take advantage of this API and do not have to worry about the details of how to actually build a model. You can take advantage of one that is already created.
@@ -119,6 +140,22 @@ You simply create a "Recommendations Model" via the API.  The model requires a f
 
 In this task, you have two alternatives to create the recommendations model. You can either use the sample app we provide, or you can use the Recommendations web UI.
 
+##### Alternative: using the Recommendations UI #####
+
+You can set up your model using the [Recommendations UI (Beta)](http://recommendations.azurewebsites.net/) and following three simple steps:
+
+1. In the [Recommendations UI](http://recommendations.azurewebsites.net/) site, provide a name for the model and then click **Add Project**.
+
+1. Add a Catalog file: use the **catalog_small.txt** one within the **Resources** folder located at **Source / Ex1 / Begin / RecommendationsSample**.
+
+1. Add a Usage file: use the **usage_data.txt** one within the **Resources** folder located at **Source / Ex1 / Begin / RecommendationsSample**.
+
+1. Create a build: we created a **Recommendation** build type.
+
+	![Recommendations UI](Images/ex1-task1-recommendations-ui.png?raw=true "Recommendations UI")
+
+	_Recommendations UI_
+	
 ##### Using the Console app #####
 
 1. Open in Visual Studio the **RecommendationsSample.sln** solution located at **Source / Ex1 / Begin / RecommendationsSample** folder.
@@ -134,21 +171,7 @@ In this task, you have two alternatives to create the recommendations model. You
 
 1. Run the solution and take note of the **Model Id** that is shown when the application finishes, you'll need it for the following task.
 
-##### Alternative: using the Recommendations UI #####
 
-You can also set up your model using the [Recommendations UI (Beta)](http://recommendations.azurewebsites.net/) and following three simple steps:
-
-1. In the [Recommendations UI](http://recommendations.azurewebsites.net/) site, provide a name for the model and then click **Add Project**.
-
-1. Add a Catalog file: use the **catalog_small.txt** one within the **Resources** folder located at **Source / Ex1 / Begin / RecommendationsSample**.
-
-1. Add a Usage file: use the **usage_data.txt** one within the **Resources** folder located at **Source / Ex1 / Begin / RecommendationsSample**.
-
-1. Create a build: we created a **Recommendation** build type.
-
-	![Recommendations UI](Images/ex1-task1-recommendations-ui.png?raw=true "Recommendations UI")
-
-	_Recommendations UI_
 
 <a name="Ex1Task3"></a>
 #### Task 3 - Updating your website to get recommendations ####
@@ -161,7 +184,13 @@ In this task, you'll update the PartsUnlimited website to use the Recommendation
 
 1. Set the AzureMLRecommendations **AccountEmail**, **AccountKey** and **ModelId** settings with the values that you got from the previous task.
 
-1. Now set the Azure DocumentDB **Endpoint** and **AuthKey** using the _URI_ and _Primary Key_ that you obtained while creating it in the first module. If you do not have it, follow these steps: [Creating the DocumentDB database](../Module1-IntelligentApp#task-1---creating-the-documentdb-database).
+1. Now set the Azure DocumentDB **Endpoint** and **AuthKey** using the _URI_ and _Primary Key_ that you obtained while creating it in the [Creating the DocumentDB database](../Module1-IntelligentApp#task-1---creating-the-documentdb-database) module. If you do not have them, you can use these credentials:
+
+ URL: 
+ https://data-module3.documents.azure.com:443/
+
+ Key: 
+ mywgRcMYpcsaRo72hbTw4HZRnEPAMzffzEYZVCZXXOWlslpnsUDwACsftxQBdSIGCC0APiq3g9dYYk2J550Eqg==
 
 1. Open the **AzureMLRecommendationEngine.cs** file located in the **Recommendations** folder.
 
