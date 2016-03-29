@@ -32,25 +32,22 @@
     // To use Azure Machine Learning Frequently Bought Together Recommendation Service,
     // please refer to the instructions under docs/MachineLearning.md in this repository.
     "AzureMLRecommendations": {
-      "AccountEmail": "",
-      "AccountKey": "",
-      "ModelId": ""
+        "AccountEmail": "msbuild2016a@outlook.com",
+        "AccountKey": "rkEVmRRVZMr2qrabbjkUJ+L0xOJrpYmuCCHkaCLWSFo",
+        "ModelId": "e68b52bc-f5aa-4b9c-9e05-7fbe997cb50c"
     },
-	"TextAnalytics": {
-	  // Please place the account key you obtained for the text analytics service here
-	  "AccountKey": ""
-	},
+    "TextAnalytics": {
+        // Please place the account key you obtained for the text analytics service here
+        "AccountKey": "rkEVmRRVZMr2qrabbjkUJ+L0xOJrpYmuCCHkaCLWSFo"
+    },
     "ApplicationInsights": {
       "InstrumentationKey": "efc04167-3227-40ff-aa88-46a271dba379"
     },
     "DocumentDB": {
-      "Database": "PartsUnlimited",
-      "Collection": "Products",
-      "Endpoint": "",
-      "AuthKey": ""
-    },
-    "TextAnalytics": {
-      "AccountKey": "{datamarket Account Key}"
+        "Database": "PartsUnlimited",
+        "Collection": "Products",
+        "Endpoint": "https://data-module3.documents.azure.com:443/",
+        "AuthKey": "mywgRcMYpcsaRo72hbTw4HZRnEPAMzffzEYZVCZXXOWlslpnsUDwACsftxQBdSIGCC0APiq3g9dYYk2J550Eqg=="
     }
   }
 }
