@@ -38,7 +38,7 @@
     },
 	"TextAnalytics": {
 	  // Please place the account key you obtained for the text analytics service here
-	  "AccountKey": "",
+	  "AccountKey": ""
 	},
     "ApplicationInsights": {
       "InstrumentationKey": "efc04167-3227-40ff-aa88-46a271dba379"
