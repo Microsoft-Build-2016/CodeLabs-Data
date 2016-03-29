@@ -3,10 +3,14 @@
 
 namespace PartsUnlimited.Models
 {
+    using System.Collections.Generic;
+
     public class Feedback
     {
         public string Message { get; set; }
+
         public double Score { get; set; }
-        public string KeyPhrases { get; set; }
+
+        public IList<string> KeyPhrases { get; set; }
     }
 }
