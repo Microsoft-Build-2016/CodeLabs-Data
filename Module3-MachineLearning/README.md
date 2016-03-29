@@ -286,7 +286,9 @@ In this task, you'll update the PartsUnlimited website to analyze the user feedb
         return View(score);
     }
 	````
+
 > **Call-outs**:
+
 > 1. The controller utilizes the service wrapper class at **Source\ Ex2\ Begin\ src\ PartsUnlimitedWebsite\ TextAnalytics\ TextAnalyticsService.cs** to get the sentiment and key phrases from a piece of text. The wrapper class makes use of the **Primary Account Key** which was added in the *config.json* file earlier.
 > 2. The **Primary Account Key** is injected into the web application via **Source\ Ex2\ Begin\ src\ PartsUnlimitedWebsite\ Startup.cs**. Take a look at the method *SetupTextAnalyticsService()* inside that class to learn how that happens.
 
@@ -404,6 +406,7 @@ In this task, you'll update the PartsUnlimited website to analyze the user feedb
 	</div>
 	</section>
 	````
+
 > **Call-outs**: The above code simply submits the entire feedback text to the text analytics service for processing. We simply display standard messages for either negative (a score of less than 0.5 in this example) or positive sentiment (a score of greater than 0.5).
 
 4. **Take it for a spin**
@@ -423,7 +426,9 @@ In this task, you'll update the PartsUnlimited website to analyze the user feedb
 		_A not so positive feedback_
 
 > **Call-outs**:
+
 > 1. Obviously the threshold of what is considered positive and what is negative will vary on the domain and the nature of the text's verbosity -- some food for thought here; think about the different scenarios where this would come in handy!
+
 > 2. As you might already know, Natural language Processing is a tricky business -- our sentiment scores are usually most accurate for short text or reviews/articles. Experiment with different sized feedbacks -- try breaking up the input into smaller chunks (split by sentences with some rudimentary delimiting logic) in the [controller method](#Feedback) before making the call to get the sentiment and key phrases, and then merge them back together (perhaps taking an average for the sentiment score).
 
 <a name="Exercise3"></a>
