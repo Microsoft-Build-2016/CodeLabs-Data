@@ -140,7 +140,7 @@ You simply create a "Recommendations Model" via the API.  The model requires a f
 
 In this task, you have two alternatives to create the recommendations model. You can either use the sample app we provide, or you can use the Recommendations web UI.
 
-##### Alternative: using the Recommendations UI #####
+##### Using the Recommendations UI #####
 
 You can set up your model using the [Recommendations UI (Beta)](http://recommendations.azurewebsites.net/) and following three simple steps:
 
@@ -156,7 +156,7 @@ You can set up your model using the [Recommendations UI (Beta)](http://recommend
 
 	_Recommendations UI_
 	
-##### Using the Console app #####
+##### Alternative: Using the sample app #####
 
 1. Open in Visual Studio the **RecommendationsSample.sln** solution located at **Source / Ex1 / Begin / RecommendationsSample** folder.
 
@@ -170,7 +170,6 @@ You can set up your model using the [Recommendations UI (Beta)](http://recommend
 1. Replace the values for the **accountEmail** and **accountKey** fields with your email and the key from the previous task.
 
 1. Run the solution and take note of the **Model Id** that is shown when the application finishes, you'll need it for the following task.
-
 
 
 <a name="Ex1Task3"></a>
