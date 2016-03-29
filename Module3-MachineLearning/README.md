@@ -261,7 +261,7 @@ In this task, you'll update the PartsUnlimited website to analyze the user feedb
 		  "AccountKey": "",
 		},
 	````
-	and place the **Primary Account Key** from [Task 1](Ex2Task1) between the empty quotes.
+	and place the **Primary Account Key** from [Task 1](#Ex2Task1) between the empty quotes.
 
 	* Open the controller file: **Source/ Ex2/ Begin/ src/ PartsUnlimitedWebsite/ Controllers/ StoreController.cs**
 
@@ -424,7 +424,7 @@ In this task, you'll update the PartsUnlimited website to analyze the user feedb
 
 > **Call-outs**:
 > 1. Obviously the threshold of what is considered positive and what is negative will vary on the domain and the nature of the text's verbosity -- some food for thought here; think about the different scenarios where this would come in handy!
-> 2. As you might already know, Natural language Processing is a tricky business -- our sentiment scores are usually most accurate for short text or reviews/articles. Experiment with different sized feedbacks -- try breaking up the input into smaller chunks (split by sentences with some rudimentary delimiting logic) in the [controller method](Feedback) before making the call to get the sentiment and key phrases, and then merge them back together (perhaps taking an average for the sentiment score).
+> 2. As you might already know, Natural language Processing is a tricky business -- our sentiment scores are usually most accurate for short text or reviews/articles. Experiment with different sized feedbacks -- try breaking up the input into smaller chunks (split by sentences with some rudimentary delimiting logic) in the [controller method](#Feedback) before making the call to get the sentiment and key phrases, and then merge them back together (perhaps taking an average for the sentiment score).
 
 <a name="Exercise3"></a>
 ### Exercise 3: Recognize users' emotions by the faces in an image ###
