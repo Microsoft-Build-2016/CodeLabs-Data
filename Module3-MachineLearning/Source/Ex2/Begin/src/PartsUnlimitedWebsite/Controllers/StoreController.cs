@@ -6,20 +6,26 @@ using Microsoft.Extensions.Caching.Memory;
 using PartsUnlimited.Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using PartsUnlimited.TextAnalytics;
 
 namespace PartsUnlimited.Controllers
 {
+
+
     public class StoreController : Controller
     {
         private readonly IPartsUnlimitedContext _db;
         private readonly IMemoryCache _cache;
         private readonly IProductsRepository productsRepository;
+        private readonly ITextAnalyticsService textAnalyticsService;
 
-        public StoreController(IPartsUnlimitedContext context, IMemoryCache memoryCache, IProductsRepository productsRepository)
+        public StoreController(IPartsUnlimitedContext context, IMemoryCache memoryCache, IProductsRepository productsRepository, ITextAnalyticsService textAnalyticsService)
         {
             _db = context;
             _cache = memoryCache;
             this.productsRepository = productsRepository;
+            this.textAnalyticsService = textAnalyticsService;
         }
 
         //
@@ -58,10 +64,12 @@ namespace PartsUnlimited.Controllers
                 if (productData != null)
                 {
                     _cache.Set(string.Format("product_{0}", id), productData, new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromMinutes(10)));
-                }                
+                }
             }
 
             return View(productData);
-        }        
+        }
+
+        // Insert the code snippet "MachineLearning - Text Analytics Feedback" below
     }
 }

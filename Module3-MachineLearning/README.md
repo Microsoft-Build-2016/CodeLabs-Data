@@ -48,6 +48,8 @@ In order to run the exercises in this module, you'll need to set up your environ
 
 Throughout the module document, you'll be instructed to insert code blocks. For your convenience, most of this code is provided as Visual Studio Code Snippets, which you can access from within Visual Studio 2015 to avoid having to add it manually.
 
+>**Tip**: To insert a code snippet use the shortcut <kbd>Ctrl</kbd> + <kbd>K</kbd>, <kbd>Ctrl</kbd> + <kbd>X</kbd>. For C# code snippets, by default these snippets would be installed in "My Code Snippets" directory. For HTML code snippets, they can be found under "My HTML Snippets"
+
 >**Note**: Each exercise is accompanied by a starting solution located in the **Begin** folder of the exercise that allows you to follow each exercise independently of the others. Please be aware that the code snippets that are added during an exercise are missing from these starting solutions and may not work until you have completed the exercise. Inside the source code for an exercise, you'll also find an **End** folder containing a Visual Studio solution with the code that results from completing the steps in the corresponding exercise. You can use these solutions as guidance if you need additional help as you work through this module.
 
 ---
@@ -105,7 +107,7 @@ In this task, you'll sign up for the Recommendations API service, and create a r
 
 **Note:** If you did not complete tasks 1, you may use the following account information to continue the exercise:
 
-|Account            |   API Key 
+|Account            |   API Key
 |-------------------|-------------------
 | msbuild2016a@outlook.com | rkEVmRRVZMr2qrabbjkUJ+L0xOJrpYmuCCHkaCLWSFo
 | msbuild2016b@outlook.com | b8zlkjoEZuu3j9t3IY6dQmBI/CEzwieKmpkTGpiDYaU
@@ -122,7 +124,7 @@ In this task, you'll sign up for the Recommendations API service, and create a r
 | msbuild2016s@outlook.com | 8OuwzTTdF3Xjh0JrKAR6Wqve7uv8ESo9lDR1lpZuRqM
 | msbuild2016t@outlook.com | 36zHNj4TJD5PABWPz5+fm0xkcY1stHXwXmKAcK4V6d0
 | msbuild2016u@outlook.com | LQDulWPordHQBOErEuM64pkHKPpzn8lAe1Lr4JRshtY
- 
+
 
 As mentioned, a Machine Learning Recommendations API was created using Azure Machine Learning by the data scientists at Microsoft.
 
@@ -155,7 +157,7 @@ You can set up your model using the [Recommendations UI (Beta)](http://recommend
 	![Recommendations UI](Images/ex1-task1-recommendations-ui.png?raw=true "Recommendations UI")
 
 	_Recommendations UI_
-	
+
 ##### Alternative: Using the sample app #####
 
 1. Open in Visual Studio the **RecommendationsSample.sln** solution located at **Source / Ex1 / Begin / RecommendationsSample** folder.
@@ -185,10 +187,10 @@ In this task, you'll update the PartsUnlimited website to use the Recommendation
 
 1. Now set the Azure DocumentDB **Endpoint** and **AuthKey** using the _URI_ and _Primary Key_ that you obtained while creating it in the [Creating the DocumentDB database](../Module1-IntelligentApp#task-1---creating-the-documentdb-database) module. If you do not have them, you can use these credentials:
 
- URL: 
+ URL:
  https://data-module3.documents.azure.com:443/
 
- Key: 
+ Key:
  mywgRcMYpcsaRo72hbTw4HZRnEPAMzffzEYZVCZXXOWlslpnsUDwACsftxQBdSIGCC0APiq3g9dYYk2J550Eqg==
 
 1. Open the **AzureMLRecommendationEngine.cs** file located in the **Recommendations** folder.
@@ -668,16 +670,16 @@ The emotions detected are anger, contempt, disgust, fear, happiness, neutral, sa
 		 {
 			  this.mediaCapture = new MediaCapture();
 			  var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
-						 
-			  // Use the front camera if found one 
+
+			  // Use the front camera if found one
 			  if (devices == null || devices.Count == 0)
 			  {
 					this.isCameraFound = false;
 					return;
 			  }
-						 
+
 			  MediaCaptureInitializationSettings settings;
-			  settings = new MediaCaptureInitializationSettings { VideoDeviceId = devices[0].Id }; // 0 => front, 1 => back 
+			  settings = new MediaCaptureInitializationSettings { VideoDeviceId = devices[0].Id }; // 0 => front, 1 => back
 			  settings.StreamingCaptureMode = StreamingCaptureMode.Video;
 
 			  await this.mediaCapture.InitializeAsync(settings);
@@ -752,7 +754,7 @@ The emotions detected are anger, contempt, disgust, fear, happiness, neutral, sa
 			  var emotionServiceClient = new EmotionServiceClient(EmotionApiKey);
 			  var emotionResult = await emotionServiceClient.RecognizeAsync(imageStream.AsStreamForRead());
 			  var emotionText = "Face [{0}]{1} Anger: {2:P2}{1} Contempt: {3:P2}{1} Disgust: {4:P2}{1} Fear: {5:P2}{1} Happiness: {6:P2}{1} Neutral: {7:P2}{1} Sadness: {8:P2}{1} Surprise: {9:P2}{1}";
-							  
+
 			  // display emotion results
 			  this.EmotionList.Items.Clear();
 			  for (int i = 0; i < emotionResult.Length; i++)
@@ -772,7 +774,7 @@ The emotions detected are anger, contempt, disgust, fear, happiness, neutral, sa
 	}
 	````
 
-	This code first uses the _MediaCapture_ object to capture a photo an store it in a _InMemoryRandomAccessStream_ object using JPEG encoding, the creates a _BitmapImage_ object to display a preview using the Image control in the UI. 
+	This code first uses the _MediaCapture_ object to capture a photo an store it in a _InMemoryRandomAccessStream_ object using JPEG encoding, the creates a _BitmapImage_ object to display a preview using the Image control in the UI.
 
 	The stream is then moved back to the begging so it can be passed to the emotion SDK by calling **RecognizeAsync**. Once the results are obtained, they are formatted as strings in a list of _TextBlock_ controls (one per recognized face).
 
