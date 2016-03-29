@@ -48,6 +48,8 @@ In order to run the exercises in this module, you'll need to set up your environ
 
 Throughout the module document, you'll be instructed to insert code blocks. For your convenience, most of this code is provided as Visual Studio Code Snippets, which you can access from within Visual Studio 2015 to avoid having to add it manually.
 
+>**Tip**: To insert a code snippet use the shortcut <kbd>Ctrl</kbd> + <kbd>K</kbd>, <kbd>Ctrl</kbd> + <kbd>X</kbd>. For C# code snippets, by default these snippets would be installed in "My Code Snippets" directory. For HTML code snippets, they can be found under "My HTML Snippets"
+
 >**Note**: Each exercise is accompanied by a starting solution located in the **Begin** folder of the exercise that allows you to follow each exercise independently of the others. Please be aware that the code snippets that are added during an exercise are missing from these starting solutions and may not work until you have completed the exercise. Inside the source code for an exercise, you'll also find an **End** folder containing a Visual Studio solution with the code that results from completing the steps in the corresponding exercise. You can use these solutions as guidance if you need additional help as you work through this module.
 
 ---
@@ -105,7 +107,7 @@ In this task, you'll sign up for the Recommendations API service, and create a r
 
 **Note:** If you did not complete tasks 1, you may use the following account information to continue the exercise:
 
-|Account            |   API Key 
+|Account            |   API Key
 |-------------------|-------------------
 | msbuild2016a@outlook.com | rkEVmRRVZMr2qrabbjkUJ+L0xOJrpYmuCCHkaCLWSFo
 | msbuild2016b@outlook.com | b8zlkjoEZuu3j9t3IY6dQmBI/CEzwieKmpkTGpiDYaU
@@ -122,7 +124,7 @@ In this task, you'll sign up for the Recommendations API service, and create a r
 | msbuild2016s@outlook.com | 8OuwzTTdF3Xjh0JrKAR6Wqve7uv8ESo9lDR1lpZuRqM
 | msbuild2016t@outlook.com | 36zHNj4TJD5PABWPz5+fm0xkcY1stHXwXmKAcK4V6d0
 | msbuild2016u@outlook.com | LQDulWPordHQBOErEuM64pkHKPpzn8lAe1Lr4JRshtY
- 
+
 
 As mentioned, a Machine Learning Recommendations API was created using Azure Machine Learning by the data scientists at Microsoft.
 
@@ -155,7 +157,7 @@ You can set up your model using the [Recommendations UI (Beta)](http://recommend
 	![Recommendations UI](Images/ex1-task1-recommendations-ui.png?raw=true "Recommendations UI")
 
 	_Recommendations UI_
-	
+
 ##### Alternative: Using the sample app #####
 
 1. Open in Visual Studio the **RecommendationsSample.sln** solution located at **Source / Ex1 / Begin / RecommendationsSample** folder.
@@ -185,10 +187,10 @@ In this task, you'll update the PartsUnlimited website to use the Recommendation
 
 1. Now set the Azure DocumentDB **Endpoint** and **AuthKey** using the _URI_ and _Primary Key_ that you obtained while creating it in the [Creating the DocumentDB database](../Module1-IntelligentApp#task-1---creating-the-documentdb-database) module. If you do not have them, you can use these credentials:
 
- URL: 
+ URL:
  https://data-module3.documents.azure.com:443/
 
- Key: 
+ Key:
  mywgRcMYpcsaRo72hbTw4HZRnEPAMzffzEYZVCZXXOWlslpnsUDwACsftxQBdSIGCC0APiq3g9dYYk2J550Eqg==
 
 1. Open the **AzureMLRecommendationEngine.cs** file located in the **Recommendations** folder.
@@ -221,40 +223,108 @@ In this exercise, you'll integrate the Text Analytics API for APIs for sentiment
 <a name="Ex2Task1"></a>
 #### Task 1 - Signing up for the Text Analytics API ####
 
-In this task, you'll go to the Azure datamarket and sign up for the Text Analytics Api service.
+In this task, you'll go to the Cortana Analytics Gallery (same as for the Recommendations excercise) and sign up for the Text Analytics API service.
 
-1. Sign up for the service here: https://datamarket.azure.com/dataset/amla/text-analytics
+1. Navigate to the Cortana Analytics Gallery at http://gallery.cortanaanalytics.com. Select the Machine Learning APIs section.
 
-1. Click **Sign Up** on the right, accept the terms and complete the registration.
+2. Select the **Text Analytics API**.
 
-1. Go to **My Account** and take note of your **Primary Account Key**, you'll need it later.
+3. Click **Sign Up**. You can either login with your existing Microsoft account or create a new one.
+
+4. Select a plan. For this exercise, you can sign up for the **free tier** which will give you **10,000 transactions per month**. You do not need to enter any billing information
+
+5. Get your API key from https://datamarket.azure.com/account. This is called the **Primary Account Key** and is listed in your Account Information
 
 <a name="Ex2Task2"></a>
 #### Task 2 - Integrating the Text Analytics API into the website ####
 
-In this task, you'll update the PartsUnlimited website to analyze the user feedback.
+In this task, you'll update the PartsUnlimited website to analyze the user feedback. You will be doing the following:
+* Hook up the text from this feedback form to the **Text Analytics API** in order to:
+	*	Identify the sentiment (positive or negative) of the text
+	* Extract one or more key phrases in that text
+* Create a feedback form where customers can write their opinion about a product.
+*	Based on the polarity of the feedback, take a corresponding action. As a starter, we will show you how to vary your HTML response message based on the sentiment score.
+
+> **Note**: Most of the scaffolding code with respect to calling the service is already in place. We have **called out** the most essential of them where ever appropriate in this exercise.
 
 1. Open in Visual Studio the **PartsUnlimited.sln** solution located at **Source / Ex2 / Begin** folder. Alternatively, you can continue with the solution from the previous exercise.
 
 >**Note**: If you choose to start fresh with the solution at **Source / Ex2 / Begin**, you'll need to configure DocumentDB in the project's config.json.
 
-1. In the **PartsUnlimited** web project, create a new model class within the **Models** folder and name it **Feedback.cs**; replace the content of the file with the following code snippet.
+2. **Hook up the Text Analytics Service**:
 
-	(Code Snippet - _MachineLearning - FeedbackModel_)
+	* Open the configuration file at **Source/ Ex2/ Begin/ src/ PartsUnlimitedWebsite/ config.json**. Locate the entry :
 
 	````C#
-	namespace PartsUnlimited.Models
+	"TextAnalytics": {
+		  // Please place the account key you obtained for the text analytics service here
+		  "AccountKey": "",
+		},
+	````
+	and place the **Primary Account Key** from [Task 1](#Ex2Task1) between the empty quotes.
+
+	* Open the controller file: **Source/ Ex2/ Begin/ src/ PartsUnlimitedWebsite/ Controllers/ StoreController.cs**
+
+	* Locate the comment
+	````C#
+	// Insert the code snippet "MachineLearning - Text Analytics Feedback" below
+	````
+	and insert the following Code snippet below the comment.
+
+	(Code Snippet - _MachineLearning - Feedback_) <a name="Feedback"></a>
+
+	````C#
+    public async Task<IActionResult> Feedback([FromForm]string feedback)
+    {
+        // get sentiment
+        var sentimentResult = await textAnalyticsService.GetSentiment(feedback);
+
+        // get key phrases
+        var phrases = await textAnalyticsService.GetKeyPhrases(feedback);
+
+        var score = new Feedback() { Score = sentimentResult.Score, KeyPhrases = phrases.KeyPhrases };
+        return View(score);
+    }
+	````
+
+> **Call-outs**:
+
+> 1. The controller utilizes the service wrapper class at **Source\ Ex2\ Begin\ src\ PartsUnlimitedWebsite\ TextAnalytics\ TextAnalyticsService.cs** to get the sentiment and key phrases from a piece of text. The wrapper class makes use of the **Primary Account Key** which was added in the *config.json* file earlier.
+> 2. The **Primary Account Key** is injected into the web application via **Source\ Ex2\ Begin\ src\ PartsUnlimitedWebsite\ Startup.cs**. Take a look at the method *SetupTextAnalyticsService()* inside that class to learn how that happens.
+
+2. **Create a feedback form for the customer**
+
+	* Locate the *cshtml* file **Source\ Ex2\ Begin\ src\ PartsUnlimitedWebsite\ Views\ Store\ Details.cshtml** and insert the following code snippet (the file has a comment indicating where the code snippet must be placed):
+
+	(Code Snippet - _MachineLearning - DetailsView_)
+	<!-- mark:7-27 -->
+	````C#
+	@using (Html.BeginForm("Feedback", "Store"))
 	{
-	    public class Feedback
-	    {
-	        public string Message { get; set; }
-	        public double Score { get; set; }
-			public string KeyPhrases {get; set; }
-	    }
+			<section>
+					<h2>Feedback</h2>
+					<div class="row">
+							<div class="col-sm-12 col-md-6 wide-col-padding no-gutter-xs">
+									<div class="col-xs-12  no-gutter-sm">
+											<p>We'd love to know your thoughts on this product</p>
+									</div>
+									<div class="form-group col-sm-8 col-md-10 no-gutter-sm">
+											@Html.TextBox("feedback", null, new { @class = "form-control", placeholder = "Feedback" })                    
+									</div>
+
+									<div class="col-md-12 no-gutter-sm">
+											<input id="feedback-button" type="submit" value="Submit Feedback" />
+									</div>
+
+							</div>
+					</div>
+			</section>
 	}
 	````
 
-1. Create a new View within the **Views / Store** folder and name it **Feedback.cshtml**; replace the content of the file with the following code snippet. This view will show a different message based on the comment resulting score after calling the Sentiment method. A value below 0.5 is considered closer to negative, so you'll show a text area to expand on the reason why the user isn't happy.
+3. **Take action based on the feedback's polarity**
+
+	* Locate the empty *cshtml* file **Source\ Ex2\ Begin\ src\ PartsUnlimitedWebsite\ Views\ Store\ Feedback.cshtml** and place the following code snippet there:
 
 	(Code Snippet - _MachineLearning - FeedbackView_)
 
@@ -332,224 +402,34 @@ In this task, you'll update the PartsUnlimited website to analyze the user feedb
 									</ul>
 				</div>
 			</div>
-	   </div>
+		 </div>
 	</div>
 	</section>
 	````
 
-1. Open the **Details.cshtml** file located in the **Views / Store** folder and add the following code snippet before the last section. This will add a section on the website that will allow the user to send feedback comments about the item.
+> **Call-outs**: The above code simply submits the entire feedback text to the text analytics service for processing. We simply display standard messages for either negative (a score of less than 0.5 in this example) or positive sentiment (a score of greater than 0.5).
 
-	(Code Snippet - _MachineLearning - DetailsView_)
-	<!-- mark:7-27 -->
-	````C#
-                <a href="@Url.Action("AddToCart", "ShoppingCart", new { id = Model.ProductId })" class="btn">Add to Cart</a>
-            </div>
-        </div>
-    </section>
+4. **Take it for a spin**
 
-		@using (Html.BeginForm("Feedback", "Store"))
-		{
-		    <section>
-		        <h2>Feedback</h2>
-		        <div class="row">
-		            <div class="col-sm-12 col-md-6 wide-col-padding no-gutter-xs">
-		                <div class="col-xs-12  no-gutter-sm">
-		                    <p>We'd love to know your thoughts on this product</p>
-		                </div>
-		                <div class="form-group col-sm-8 col-md-10 no-gutter-sm">
-		                    @Html.TextBox("feedback", null, new { @class = "form-control", placeholder = "Feedback" })                    
-		                </div>
+	1. Run the application. Select a product and submit a comment, you can try a positive and then a negative feedback to see different results.
 
-		                <div class="col-md-12 no-gutter-sm">
-		                    <input id="feedback-button" type="submit" value="Submit Feedback" />
-		                </div>
+		![New feedback section](Images/ex2-task2-feedback-section.png?raw=true "New feedback section")
 
-		            </div>
-		        </div>
-		    </section>
-		}
+		_New feedback section_
 
-		<section class="section-alt">
-    	@await Component.InvokeAsync("Recommendations", Model)
-    	</section>
-	````
+		![Positive feedback view](Images/ex2-task2-feedback-positive.png?raw=true "Positive feedback view")
 
-1. Add a new entry within the **config.json** file for the Text Analytics service.
+		_Positive feedback view_
 
-	````
-	"TextAnalytics": {
-		"AccountKey": "{datamarket Account Key}"
-	}
-	````
+		![A not so positive feedback](Images/ex2-task2-feedback-not-positive.png?raw=true "A not so positive feedback")
 
-1. Create a new folder within **PartsUnlimited** and name it **TextAnalytics**.
+		_A not so positive feedback_
 
-1. Add a new class file **SentimentResult.cs** for the API result into the new folder.
+> **Call-outs**:
 
-	(Code Snippet - _MachineLearning - SentimentResult_)
+> 1. Obviously the threshold of what is considered positive and what is negative will vary on the domain and the nature of the text's verbosity -- some food for thought here; think about the different scenarios where this would come in handy!
 
-	````C#
-	namespace PartsUnlimited.TextAnalytics
-	{
-	    public class SentimentResult
-	    {
-	        public double Score { get; set; }
-
-	        public string[] KeyPhrases { get; set; }
-	    }
-	}
-	````
-
-1. In the same folder, add a new interface **ITextAnalyticsService**. The following methods are going to be Api calls.
-
-	(Code Snippet - _MachineLearning - ITextAnalyticsService_)
-
-	````C#
-	namespace PartsUnlimited.TextAnalytics
-	{
-	    public interface ITextAnalyticsService
-	    {
-	        SentimentResult GetSentiment(string inputTextEncoded);
-
-	        SentimentResult GetKeyPhrases(string inputTextEncoded);
-	    }
-	}
-	````
-
-1. Now let's add code for the Text Analytics service calls in a new class **TextAnalyticsService**.
-	- The constructor set up the Text Analysis Api using the service base Uri and account key that you set in the config.json file.
-	- The **GetSentiment** method is the one that makes the request to the _GetSentiment_ method of the Api with the user comments in order to get the score that indicates if it's a positive or negative feedback.
-	- The **GetKeyPhrases** method calls the _GetKeyPhrases_ to extract key phrases, which denote the main talking points in the text.
-
-	(Code Snippet - _MachineLearning - TextAnalyticsService_)
-
-	````C#
-	namespace PartsUnlimited.TextAnalytics
-	{    
-	    using System;
-	    using System.Net.Http;
-	    using System.Net.Http.Headers;
-	    using System.Text;
-	    using Newtonsoft.Json;
-
-	    public class TextAnalyticsService : ITextAnalyticsService
-	    {
-	        private HttpClient httpClient = new HttpClient();
-	        private const string ServiceBaseUri = "https://api.datamarket.azure.com/";
-
-	        public TextAnalyticsService(string accountKey)
-	        {
-	            httpClient.BaseAddress = new Uri(ServiceBaseUri);
-	            var creds = "AccountKey:" + accountKey;
-	            var authorizationHeader = "Basic " + Convert.ToBase64String(Encoding.ASCII.GetBytes(creds));
-
-	            httpClient.DefaultRequestHeaders.Add("Authorization", authorizationHeader);
-	            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-	        }
-
-	        public SentimentResult GetSentiment(string inputTextEncoded)
-	        {
-	            var sentimentRequest = "data.ashx/amla/text-analytics/v1/GetSentiment?Text=" + inputTextEncoded;
-	            var responseTask = httpClient.GetAsync(sentimentRequest);
-	            responseTask.Wait();
-
-	            var response = responseTask.Result;
-	            var contentTask = response.Content.ReadAsStringAsync();
-	            contentTask.Wait();
-
-	            var content = contentTask.Result;
-	            if (!response.IsSuccessStatusCode)
-	            {
-	                // TODO handle error response
-	                return new SentimentResult { Score = 1 };
-	            }
-
-	            return JsonConvert.DeserializeObject<SentimentResult>(content);
-	        }
-
-	        public SentimentResult GetKeyPhrases(string inputTextEncoded)
-	        {
-	            var sentimentRequest = "data.ashx/amla/text-analytics/v1/GetKeyPhrases?Text=" + inputTextEncoded;
-	            var responseTask = httpClient.GetAsync(sentimentRequest);
-	            responseTask.Wait();
-
-	            var response = responseTask.Result;
-	            var contentTask = response.Content.ReadAsStringAsync();
-	            contentTask.Wait();
-
-	            var content = contentTask.Result;
-	            if (!response.IsSuccessStatusCode)
-	            {
-	                // TODO handle error response
-	                return new SentimentResult { Score = 1 };
-	            }
-
-	            return JsonConvert.DeserializeObject<SentimentResult>(content);
-	        }
-	    }
-	}
-	````
-
-1. Open the **Startup.cs** file to configure the new service dependency injection by adding the following code along with the _PartsUnlimited.TextAnalytics_ using statement.
-
-	````C#
-	services.AddSingleton<ITextAnalyticsService, TextAnalyticsService>(s =>
-  {
-      string accountKey = Configuration["Keys:TextAnalytics:AccountKey"];
-      return new TextAnalyticsService(accountKey);
-  });
-	````
-
-1. Go to the **StoreController.cs** file located in the **Controllers** folder and add the following variable and constructor update for the Text Analysis Api setup. Resolve the missing _PartsUnlimited.TextAnalytics_ using statement.
-
-	(Code Snippet - _MachineLearning - StoreControllerSetup_)
-	<!-- mark:5-13 -->
-	````C#
-	public class StoreController : Controller
-	    {
-	        // ...
-
-	        private readonly ITextAnalyticsService textAnalyticsService;
-
-					public StoreController(IPartsUnlimitedContext context, IMemoryCache memoryCache, IProductsRepository productsRepository, ITextAnalyticsService textAnalyticsService)
-	        {
-	            _db = context;
-	            _cache = memoryCache;
-	            this.productsRepository = productsRepository;
-	            this.textAnalyticsService = textAnalyticsService;
-	        }
-	        // ...
-
-	````
-
-1. Now add the following method. The **Feedback** action is the one that handles the form submit request that includes the user comments and returns the Feedback view that you previously added after calling the Text Analytics service.
-
-	(Code Snippet - _MachineLearning - Feedback_)
-
-	````C#
-	public IActionResult Feedback([FromForm]string feedback)
-	{
-		// get sentiment
-		var sentimentResult = textAnalyticsService.GetSentiment(feedback);
-		var phrases = textAnalyticsService.GetKeyPhrases(feedback);
-		var score = new Feedback() { Score = sentimentResult.Score, KeyPhrases = phrases.KeyPhrases };
-		return View(score);
-	}
-	````
-
-1. Run the application. Select a product and submit a comment, you can try a positive and then a negative feedback to see different results.
-
-	![New feedback section](Images/ex2-task2-feedback-section.png?raw=true "New feedback section")
-
-	_New feedback section_
-
-	![Positive feedback view](Images/ex2-task2-feedback-positive.png?raw=true "Positive feedback view")
-
-	_Positive feedback view_
-
-	![Not that positive feedback](Images/ex2-task2-feedback-not-positive.png?raw=true "Not that positive feedback")
-
-	_Not that positive feedback_
+> 2. As you might already know, Natural language Processing is a tricky business -- our sentiment scores are usually most accurate for short text or reviews/articles. Experiment with different sized feedbacks -- try breaking up the input into smaller chunks (split by sentences with some rudimentary delimiting logic) in the [controller method](#Feedback) before making the call to get the sentiment and key phrases, and then merge them back together (perhaps taking an average for the sentiment score).
 
 <a name="Exercise3"></a>
 ### Exercise 3: Recognize users' emotions by the faces in an image ###
@@ -668,16 +548,16 @@ The emotions detected are anger, contempt, disgust, fear, happiness, neutral, sa
 		 {
 			  this.mediaCapture = new MediaCapture();
 			  var devices = await DeviceInformation.FindAllAsync(DeviceClass.VideoCapture);
-						 
-			  // Use the front camera if found one 
+
+			  // Use the front camera if found one
 			  if (devices == null || devices.Count == 0)
 			  {
 					this.isCameraFound = false;
 					return;
 			  }
-						 
+
 			  MediaCaptureInitializationSettings settings;
-			  settings = new MediaCaptureInitializationSettings { VideoDeviceId = devices[0].Id }; // 0 => front, 1 => back 
+			  settings = new MediaCaptureInitializationSettings { VideoDeviceId = devices[0].Id }; // 0 => front, 1 => back
 			  settings.StreamingCaptureMode = StreamingCaptureMode.Video;
 
 			  await this.mediaCapture.InitializeAsync(settings);
@@ -752,7 +632,7 @@ The emotions detected are anger, contempt, disgust, fear, happiness, neutral, sa
 			  var emotionServiceClient = new EmotionServiceClient(EmotionApiKey);
 			  var emotionResult = await emotionServiceClient.RecognizeAsync(imageStream.AsStreamForRead());
 			  var emotionText = "Face [{0}]{1} Anger: {2:P2}{1} Contempt: {3:P2}{1} Disgust: {4:P2}{1} Fear: {5:P2}{1} Happiness: {6:P2}{1} Neutral: {7:P2}{1} Sadness: {8:P2}{1} Surprise: {9:P2}{1}";
-							  
+
 			  // display emotion results
 			  this.EmotionList.Items.Clear();
 			  for (int i = 0; i < emotionResult.Length; i++)
@@ -772,7 +652,7 @@ The emotions detected are anger, contempt, disgust, fear, happiness, neutral, sa
 	}
 	````
 
-	This code first uses the _MediaCapture_ object to capture a photo an store it in a _InMemoryRandomAccessStream_ object using JPEG encoding, the creates a _BitmapImage_ object to display a preview using the Image control in the UI. 
+	This code first uses the _MediaCapture_ object to capture a photo an store it in a _InMemoryRandomAccessStream_ object using JPEG encoding, the creates a _BitmapImage_ object to display a preview using the Image control in the UI.
 
 	The stream is then moved back to the begging so it can be passed to the emotion SDK by calling **RecognizeAsync**. Once the results are obtained, they are formatted as strings in a list of _TextBlock_ controls (one per recognized face).
 

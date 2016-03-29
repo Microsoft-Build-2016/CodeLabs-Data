@@ -20,6 +20,8 @@ using System;
 
 namespace PartsUnlimited
 {
+    using PartsUnlimited.TextAnalytics;
+
     public class Startup
     {
         public IConfiguration Configuration { get; private set; }
@@ -99,6 +101,8 @@ namespace PartsUnlimited
 
             SetupRecommendationService(services);
 
+            SetupTextAnalyticsService(services);
+
             services.AddScoped<IWebsiteOptions>(p =>
             {
                 var telemetry = p.GetRequiredService<ITelemetryProvider>();
@@ -146,6 +150,15 @@ namespace PartsUnlimited
                 services.AddInstance<IAzureMLRecommendationsConfig>(azureMlConfig);
                 services.AddScoped<IRecommendationEngine, AzureMLRecommendationEngine>();
             }
+        }
+
+        private void SetupTextAnalyticsService(IServiceCollection services)
+        {
+            services.AddSingleton<ITextAnalyticsService, TextAnalyticsService>(s =>
+            {
+                string accountKey = Configuration["Keys:TextAnalytics:AccountKey"];
+                return new TextAnalyticsService(accountKey);
+            });
         }
 
         //This method is invoked when KRE_ENV is 'Development' or is not defined

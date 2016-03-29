@@ -98,13 +98,9 @@ namespace PartsUnlimited
                 return new ProductsRepository(endpoint, authKey, databaseId, collectionId);
             });
 
-            services.AddSingleton<ITextAnalyticsService, TextAnalyticsService>(s =>
-            {
-                string accountKey = Configuration["Keys:TextAnalytics:AccountKey"];
-                return new TextAnalyticsService(accountKey);
-            });
-
             SetupRecommendationService(services);
+
+            SetupTextAnalyticsService(services);
 
             services.AddScoped<IWebsiteOptions>(p =>
             {
@@ -153,6 +149,15 @@ namespace PartsUnlimited
                 services.AddInstance<IAzureMLRecommendationsConfig>(azureMlConfig);
                 services.AddScoped<IRecommendationEngine, AzureMLRecommendationEngine>();
             }
+        }
+
+        private void SetupTextAnalyticsService(IServiceCollection services)
+        {
+            services.AddSingleton<ITextAnalyticsService, TextAnalyticsService>(s =>
+            {
+                string accountKey = Configuration["Keys:TextAnalytics:AccountKey"];
+                return new TextAnalyticsService(accountKey);
+            });
         }
 
         //This method is invoked when KRE_ENV is 'Development' or is not defined
