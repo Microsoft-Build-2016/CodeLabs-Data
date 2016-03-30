@@ -1,0 +1,53 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MSCorp.AdventureWorks.Web.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SearchPrimaryIndexName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Products</Value>
+    </Setting>
+    <Setting Name="DocumentDbDatabase" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Database</Value>
+    </Setting>
+    <Setting Name="DocumentDbCollectionSuffix" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Collection</Value>
+    </Setting>
+    <Setting Name="SearchReviewIndexName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Reviews</Value>
+    </Setting>
+    <Setting Name="AzureImageBlobContainerName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">docdbimages</Value>
+    </Setting>
+    <Setting Name="SearchApiVersion" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">api-version=2014-07-31-Preview</Value>
+    </Setting>
+    <Setting Name="AzureImageBlobConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;DefaultEndpointsProtocol=https;AccountName=teched2014store;AccountKey=2/QLHue25UK97HaL2niF3M4pAVaYpTo/MEPaXqyYKoNH1CIWawXLlcqnAC/MhOmEq81r6mSdvO46W4Bnv83LHA==&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">DefaultEndpointsProtocol=https;AccountName=teched2014store;AccountKey=2/QLHue25UK97HaL2niF3M4pAVaYpTo/MEPaXqyYKoNH1CIWawXLlcqnAC/MhOmEq81r6mSdvO46W4Bnv83LHA==</Value>
+    </Setting>
+    <Setting Name="OrderDatabaseConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Server=tcp:ldd07q5vqq.database.windows.net,1433;Database=docdbadventureworksdb;User ID=davidsh@ldd07q5vqq;Password=Password1;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Server=tcp:ldd07q5vqq.database.windows.net,1433;Database=docdbadventureworksdb;User ID=davidsh@ldd07q5vqq;Password=Password1;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;</Value>
+    </Setting>
+    <Setting Name="SearchApiKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">E667C3C9113D5BABE52047B5FCBE9057</Value>
+    </Setting>
+    <Setting Name="SearchServiceUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://teched2014.search.windows.net/indexes</Value>
+    </Setting>
+    <Setting Name="DocumentDbUri" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://teched2014.documents.azure.com:443</Value>
+    </Setting>
+    <Setting Name="DocumentDbAuthKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">fGzzwG+f4AzO+oshK82ahUxVPUgiTmzUDYFZORXrzJZE7y1VBr1qJlw93epO9McIpoCabfRfC6AGj/RD6fM54Q==</Value>
+    </Setting>
+    <Setting Name="AzureTableBlobConnectionString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">DefaultEndpointsProtocol=https;AccountName=teched2014store;AccountKey=2/QLHue25UK97HaL2niF3M4pAVaYpTo/MEPaXqyYKoNH1CIWawXLlcqnAC/MhOmEq81r6mSdvO46W4Bnv83LHA==</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

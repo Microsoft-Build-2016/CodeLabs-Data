@@ -1,0 +1,6 @@
+﻿{
+  "DatabaseName" : "Database",
+  "CollectionName": "ProductCollection",
+  "Query": "SELECT VALUE udf.formatProduct(c) FROM c WHERE c.ProductCode != null AND c._ts > @HighWaterMark",
+  "Type": "documentdb"
+}

@@ -1,0 +1,25 @@
+﻿@model double
+
+@{
+    ViewBag.Title = "Mass Order Example Generator";
+    ViewBag.PageClass = "sub-lvl-bg";
+}
+@section HomePageHeader {
+    @Html.Partial("_SecondaryHeader")
+}
+<div class="row">
+    <div class="col-xs-12">
+        <ul>
+            <li>
+                <h2>Mass Order Generator</h2>
+                @using (Html.BeginForm("MassOrdering", "MassOrderExample"))
+                {
+                    <input type="number" name="numberOfOrders" value="1000"/>
+                    <input type="submit" value="Generate and Save Mass Order Data">
+                }
+                <p>Time taken = @Html.DisplayForModel();</p>
+            </li>
+        </ul>
+    </div>
+</div>
+

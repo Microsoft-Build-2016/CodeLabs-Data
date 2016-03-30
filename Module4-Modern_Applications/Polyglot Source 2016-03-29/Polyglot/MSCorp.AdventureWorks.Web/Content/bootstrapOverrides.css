@@ -1,0 +1,17 @@
+﻿/* Override the margin at the bottom for jumbo tron for this  on this site*/
+.jumbotron {
+  margin-bottom: 0;
+}
+
+.table-no-border>thead>tr>th, 
+.table-no-border>tbody>tr>th, 
+.table-no-border>tfoot>tr>th, 
+.table-no-border>thead>tr>td, 
+.table-no-border>tbody>tr>td, 
+.table-no-border>tfoot>tr>td {
+  border-top: none; 
+}
+
+.row {
+  margin-right: 0;
+}

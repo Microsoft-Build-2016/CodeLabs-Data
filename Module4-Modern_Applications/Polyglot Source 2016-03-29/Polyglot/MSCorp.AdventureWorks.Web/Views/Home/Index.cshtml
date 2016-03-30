@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Home";
+    ViewBag.PageClass = "homepage-bg";
+    Html.BeginScriptContext();
+    Html.AddScriptFile("~/js/homepage.js");
+    Html.EndScriptContext();
+}
+
+@section HomePageHeader {
+    @Html.Partial("_HomeHeader")
+
+}
+<div class="row" ng-controller="ProductCategoriesController" ng-cloak>
+    <div class="hidden-xs col-md-4 col-sm-4" ng-repeat="category in productCategories">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="media-heading title-font text-center"><a ng-href="@Url.Content("~/")Search/{{category.Value}}" ng-bind-template="{{category.Value}}."></a></h1>
+                <div class="text-center text-description"><h4 ng-bind-template="from ${{lowestCost(category.Value)}}"></h4></div>
+            </div>
+            <!-- products list-->
+            <ul class="list-group">
+                <li class="list-group-item list-group-fixed-height list-product-item margin-top" ng-repeat="product in products | filter: categoryMatcher(category) | limitTo: productLimit">
+                    <div class="media text-center product-thumb">
+
+                        <a ng-href="@Url.Content("~/")Product/{{product.productCode}}">
+                            <img class="img-responsive img-responsive-fix center-block ng-cloak"
+                                 data-ng-src="{{product.image}}"
+                                 ng-cloak
+                                 alt="{{product.name}}" />
+                        </a>
+
+                        <div class="media-body">
+                            <h5>
+                                <span class="product-name" ng-bind-template="{{product.name}} /"></span>
+                                <span class="product-price" ng-class="{ striked: product.priceSet.isDiscounted}" ng-bind-template="{{product.priceSet.displayPrice.Currency.CurrencySymbol}}{{product.priceSet.displayPrice.Amount}}"></span>
+                                <span class="discounted-price" ng-show="product.priceSet.isDiscounted" ng-bind-template="&nbsp;{{product.priceSet.displayDiscountedPrice.Currency.CurrencySymbol}}{{product.priceSet.displayDiscountedPrice.Amount}}"></span>
+                            </h5>
+                        </div>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <accordion class="visible-xs">
+        <accordion-group ng-repeat="category in productCategories"
+                         is-open="category.open">
+            <accordion-heading>
+                <h2 class="panel-heading text-center ng-cloak" ng-cloak>
+                    {{category.value}}
+                    <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': category.open, 'glyphicon-chevron-right': !category.open}"></i>
+                </h2>
+            </accordion-heading>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-6 media text-center" ng-repeat="product in products | filter: categoryMatcher(category)">
+                        <a ng-href="~/Product/{{product.productCode}}">
+                            <img class="img-responsive center-block ng-cloak" ng-cloak data-ng-src="{{product.image}}" alt="{{product.name}}" />
+                        </a>
+                        <div class="media-body">
+                            <h5>
+                                <span ng-bind-template="{{product.name}} /"></span>
+                                <span class="product-price" ng-class="{ striked: product.priceSet.isDiscounted}" ng-bind-template="{{product.priceSet.displayPrice.Currency.CurrencySymbol}}{{product.priceSet.displayPrice.Amount}}"></span>
+                                <span class="discounted-price" ng-show="product.priceSet.isDiscounted" ng-bind-template="&nbsp;{{product.priceSet.displayDiscountedPrice.Currency.CurrencySymbol}}{{product.priceSet.displayDiscountedPrice.Amount}}"></span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </accordion-group>
+    </accordion>
+</div>

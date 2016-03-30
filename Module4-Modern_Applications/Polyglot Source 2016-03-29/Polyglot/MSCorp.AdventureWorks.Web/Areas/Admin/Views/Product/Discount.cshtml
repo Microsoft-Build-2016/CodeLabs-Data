@@ -1,0 +1,82 @@
+﻿@using Forloop.HtmlHelpers
+@{
+    ViewBag.Title = "Discounts";
+    ViewBag.PageClass = "sub-lvl-bg";
+    Html.BeginScriptContext();
+    Html.AddScriptFile("~/js/adminDiscount.js");
+    Html.EndScriptContext();
+}
+@section HomePageHeader {
+    @Html.Partial("_SecondaryHeader")
+}
+<script language="javascript">
+    var searchText = '@ViewBag.SearchText';
+    var searchAttribute = '@ViewBag.SearchAttribute';
+</script>
+
+
+<div class="row" ng-controller="DiscountController" ng-cloak>
+    <div class="col-md-12 sub-head">
+        <form ng-submit="searchSubmit()">
+            <h3>Apply discounts</h3>
+        </form>
+    </div>
+    <div class="col-md-2 no-padding margin-top">
+        <div>
+            <div ng-show="!resultCount() && hasFinished">
+                <h4 ng-bind-template="We couldn't find what you were looking for.  Please try again."></h4>
+            </div>
+
+            <div ng-show="hasFinished && resultCount() && refiners">
+                <h4>Refine by:</h4>
+            </div>
+
+            <!-- facet list-->
+            <div class="discount-filters">
+                
+                <div class="discount-section">
+                    <h5>Select products</h5>
+                    <select class="discount-input" ng-options="a.attributeName for a in availableAttributes" ng-model="selectedAttribute"></select>
+                    <select class="discount-input" ng-options="option for option in selectedAttribute.options" ng-model="selectedAttributeValue"></select>
+                    <a class="btn-sub" ng-click="filterProducts()">Apply Filter</a>
+                </div>
+                <div class="discount-section">
+                    <h5>Set discount</h5>
+                    <input type="number" class="discount-input" min="0" max="99" ng-model="newDiscount" ng-change="previewDiscount()" />
+
+                    <a class="btn-sub" ng-click="applyDiscount()">Apply Discount</a>
+                </div>
+                
+                <div class="margin-top float-right"><a ng-href="{{requestUrl}}" class="btn-sub" ng-show="hasFinished" target="_blank">View Search JSON</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10 border-left">
+        <div class="panel panel-default">
+            <div class="ui-text text-center" ng-show="!hasFinished">Loading...</div>
+            <div class="ui-text text-center" ng-show="hasFinished" ng-bind-template="{{resultCount()}} results found for {{searchResultMessage}}"></div>
+
+            <!-- products list-->
+            <ul class="list-group">
+                <li class="list-group-item list-group-fixed-height list-group-threes" ng-repeat="product in products">
+                    <div class="media text-center">
+                        <a ng-href="@Url.Content("~/")Product/{{product.productCode}}">
+                            <img class="img-responsive img-responsive-fix center-block"
+                                 data-ng-src="{{product.image}}"
+                                 alt="{{product.name}}" />
+                        </a>
+                        <div class="media-body">
+                            <h5>
+                                <span class="product-name" ng-bind-template="{{product.name}} /"></span>
+                                <span class="product-price" ng-class="{ striked: product.priceSet.isDiscounted}" ng-bind-template="{{product.priceSet.displayPrice.Currency.CurrencySymbol}}{{product.priceSet.displayPrice.Amount}}"></span>
+                                <span class="discounted-price" ng-show="product.priceSet.isDiscounted" ng-bind-template="&nbsp;{{product.priceSet.displayDiscountedPrice.Currency.CurrencySymbol}}{{product.priceSet.displayDiscountedPrice.Amount}}"></span>
+                            </h5>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</div>

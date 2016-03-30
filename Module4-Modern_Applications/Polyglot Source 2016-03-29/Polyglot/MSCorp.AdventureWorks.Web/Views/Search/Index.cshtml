@@ -1,0 +1,95 @@
+﻿@{
+    ViewBag.Title = "Search";
+    ViewBag.PageClass = "sub-lvl-bg";
+    Html.BeginScriptContext();
+    Html.AddScriptFile("~/js/search.js");
+    Html.EndScriptContext();
+}
+@section HomePageHeader {
+    @Html.Partial("_SecondaryHeader")
+}
+<script language="javascript">
+    var searchText = '@ViewBag.SearchText';
+    var searchAttribute = '@ViewBag.SearchAttribute';
+</script>
+
+
+<div class="row" ng-controller="SearchViewModel" ng-cloak>
+    <div class="col-md-12 sub-head">
+        <div class="col-md-6">
+            <form ng-submit="searchSubmit()">
+                <h3>Search results for:</h3>
+                <input placeholder="Keyword search" type="text" value="{{searchTerm}}" class="inline-search"
+                       name="inline-search" id="inline-search" ng-model="searchText"
+                       typeahead="suggestion.text for suggestion in getAutoCompleteSuggestions($viewValue)"
+                       typeahead-loading="loadingSuggestions"
+                       typeahead-on-select="loadProduct($item)"
+                       typeahead-template-url="searchTemplate.html" />
+            </form>
+        </div>
+        <div class="col-md-6">
+            @{
+                if (!ViewBag.IsRelatedProductSearch)
+                {
+                    <div class="sort-controls ng-cloak" ng-cloak>
+                        <select ng-options="field.name for field in sortFields" ng-model="sortField" ng-change="refineProducts()"></select>
+                        <select ng-options="direction as direction.name for direction in sortDirections" ng-model="sortDirection" ng-show="sortField.value != 'score'" ng-change="refineProducts()"></select>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="col-md-2 no-padding margin-top">
+        <div>
+            <div ng-show="!resultCount() && hasFinished">
+                <h4 ng-bind-template="We couldn't find what you were looking for.  Please try again."></h4>
+            </div>
+
+            <div ng-show="hasFinished && resultCount() && refiners">
+                <h4>Refine by:</h4>
+            </div>
+
+            <!-- facet list-->
+            <div class="product-filters">
+                <div class="border-top" ng-repeat="refiner in refiners | orderBy:'name'" ng-show="refiner.hasFilters()">
+                    <h5 ng-bind-template="{{refiner.name}}"></h5>
+                    <p ng-repeat="filter in refiner.filters | orderBy:'name'">
+                        <label for="{{filter.name}}">
+                            <input class="product-checkbox" type="checkbox" ng-model="filter.selected" ng-change="refineProducts()" id="{{filter.name}}" ng-bind-template=""> {{filter.name}} ({{filter.count}})
+                        </label>
+                    </p>
+                </div>
+                <div class="margin-top"><img src="~/images/img-banner-save.png" /></div>
+                <div class="margin-top float-right"><a ng-href="{{requestUrl}}" class="btn-sub" ng-show="hasFinished" target="_blank">View Search JSON</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-10 border-left">
+        <div class="panel panel-default">
+            <div class="ui-text text-center" ng-show="!hasFinished">Searching...</div>
+            <div class="ui-text text-center" ng-show="hasFinished" ng-bind-template="{{resultCount()}} results found for {{searchResultMessage}}"></div>
+
+            <!-- products list-->
+            <ul class="list-group">
+                <li class="list-group-item list-group-fixed-height list-group-threes" ng-repeat="product in products">
+                    <div class="media text-center">
+                        <a ng-href="@Url.Content("~/")Product/{{product.productCode}}">
+                            <img class="img-responsive img-responsive-fix center-block"
+                                 data-ng-src="{{product.image}}"
+                                 alt="{{product.name}}" />
+                        </a>
+                        <div class="media-body">
+                            <h5>
+                                <span class="product-name" ng-bind-template="{{product.name}} /"></span>
+                                <span class="product-price" ng-class="{ striked: product.priceSet.isDiscounted}" ng-bind-template="{{product.priceSet.displayPrice.Currency.CurrencySymbol}}{{product.priceSet.displayPrice.Amount}}"></span>
+                                <span class="discounted-price" ng-show="product.priceSet.isDiscounted" ng-bind-template="&nbsp;{{product.priceSet.displayDiscountedPrice.Currency.CurrencySymbol}}{{product.priceSet.displayDiscountedPrice.Amount}}"></span>
+                            </h5>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+</div>

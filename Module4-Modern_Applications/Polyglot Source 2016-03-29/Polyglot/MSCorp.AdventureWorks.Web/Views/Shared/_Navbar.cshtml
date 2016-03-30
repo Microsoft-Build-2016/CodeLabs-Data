@@ -1,0 +1,27 @@
+﻿<ul class="nav navbar-nav navbar-right">
+    <li class="navbar-btn">
+        <a href="~/"><span class="glyphicon glyphicon-home"></span></a>
+    </li>
+    <li class="navbar-btn">
+        <a href="~/Checkout">
+            <span class="glyphicon glyphicon-shopping-cart"></span>
+            <span class="cart-count" ng-show="cart.quantity" ng-bind-template="{{cart.quantity}}"></span>
+        </a>
+    </li>
+    <li class="navbar-btn" ng-controller="MainPageViewModel">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span></a>
+        <ul class="dropdown-menu">
+            <li>
+                <a style="font-style: italic; right:0; position:absolute;" href="~/OrderHistory">History</a>
+                <a style="font-weight:bold; cursor: default" ng-bind-template="{{currentUser.FirstName}} {{currentUser.LastName}} ({{currentUser.PreferredCurrency.Code}})"></a>
+            </li>
+            <li class="divider"/>
+            <li ng-repeat="customer in allCustomers" ng-hide="{{customer.CustomerKey == currentUser.CustomerKey}}">
+                <a ng-click="setCurrentUser(customer)"
+                   ng-bind-template="{{customer.FirstName}} {{customer.LastName}} ({{customer.PreferredCurrency.Code}})"
+                   style="cursor: pointer"></a>
+            </li>
+        </ul>
+    </li>
+   
+</ul>

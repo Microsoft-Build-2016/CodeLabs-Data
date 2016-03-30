@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = @ViewBag.CategoryName;
+    ViewBag.PageClass = "sub-lvl-bg";
+    Html.BeginScriptContext();
+    Html.AddScriptFile("~/js/category.js");
+    Html.EndScriptContext();
+}
+@section HomePageHeader {
+    @Html.Partial("_SecondaryHeader")
+}
+<script language="javascript">
+    var categoryName = '@ViewBag.CategoryName';
+</script>
+
+<div class="row product-detail-media" ng-controller="CategoryViewModel" ng-cloak>
+    <div class="panel panel-default col-md-12">
+        <!-- products list-->
+        <ul class="list-group">
+            <li class="list-group-item list-group-fixed-height list-group-threes" ng-repeat="product in products">
+                <div class="media text-center">
+                    <a href="@Url.Content("~/")Product/{{product.data.ProductCode}}">
+                        <img class="img-responsive img-responsive-fix center-block"
+                             data-ng-src="{{product.data.ThumbImageUrl}}"
+                             alt="{{product.data.Name}}" />
+                    </a>
+                    <div class="media-body">
+                        <h5>
+                            <span>{{product.data.Name}} /</span>
+                            <span>${{product.data.Price}}</span>
+                        </h5>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

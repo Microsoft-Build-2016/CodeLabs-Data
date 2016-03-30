@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Demo Setup";
+    ViewBag.PageClass = "sub-lvl-bg";
+}
+@section HomePageHeader {
+    @Html.Partial("_SecondaryHeader")
+}
+<div class="row">
+    <div class="col-xs-12">
+        <ul>
+            @*<li>@Html.ActionLink("Create index", "CreateIndex", new { id = "a" })</li>
+            <li>@Html.ActionLink("Create mock data", "CreateData", new { id = "a" })</li>*@
+            <li>
+                <h2>Simple setup</h2>
+                @Html.ActionLink("Autopopulate data", "SimpleSetup")
+            </li>
+            <li>
+                <h2>Manual setup</h2>
+                <h3>Clear data</h3>
+                @Html.ActionLink("Clear demo data", "DeleteData")
+                <div>
+                    <h3>Import data</h3>
+                    <file-uploader></file-uploader>
+                    <div id="upload-message"></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/js/demosetup.js")
+}
+

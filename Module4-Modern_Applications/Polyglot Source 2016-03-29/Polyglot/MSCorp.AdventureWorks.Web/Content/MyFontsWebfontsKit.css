@@ -1,0 +1,35 @@
+/**
+ * @license
+ * MyFonts Webfont Build ID 2830485, 2014-06-17T19:59:38-0400
+ * 
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are 
+ * explicitly restricted from using the Licensed Webfonts(s).
+ * 
+ * You may obtain a valid license at the URLs below.
+ * 
+ * Webfont: Freight Sans Pro Bold by GarageFonts
+ * URL: http://www.myfonts.com/fonts/garagefonts/freight-sans-pro/bold/
+ * Licensed pageviews: 110,000
+ * 
+ * Webfont: Freight Sans Pro Medium by GarageFonts
+ * URL: http://www.myfonts.com/fonts/garagefonts/freight-sans-pro/medium/
+ * Licensed pageviews: 10,000
+ * 
+ * 
+ * License: http://www.myfonts.com/viewlicense?type=web&buildid=2830485
+ * Webfonts copyright: Copyright &#x00A9; 2004-2009, Joshua Darden &amp; Phil's Fonts, Inc. All rights reserved. Published by Garagefonts USA 301-879-9222 www.garagefonts.com
+ * 
+ * © 2014 MyFonts Inc
+*/
+
+
+/* @import must be at top of file, otherwise CSS will not work */
+@import url("//hello.myfonts.net/count/2b3095");
+
+  
+@font-face {font-family: 'FreightSansProBold-Regular';src: url('../fonts/2B3095_0_0.eot');src: url('../fonts/2B3095_0_0.eot?#iefix') format('embedded-opentype'),url('../fonts/2B3095_0_0.woff') format('woff'),url('../fonts/2B3095_0_0.ttf') format('truetype'),url('../fonts/2B3095_0_0.svg#wf') format('svg');}
+ 
+  
+@font-face {font-family: 'FreightSansProMedium-Regular';src: url('../fonts/2B3095_1_0.eot');src: url('../fonts/2B3095_1_0.eot?#iefix') format('embedded-opentype'),url('../fonts/2B3095_1_0.woff') format('woff'),url('../fonts/2B3095_1_0.ttf') format('truetype'),url('../fonts/2B3095_1_0.svg#wf') format('svg');}
+ 

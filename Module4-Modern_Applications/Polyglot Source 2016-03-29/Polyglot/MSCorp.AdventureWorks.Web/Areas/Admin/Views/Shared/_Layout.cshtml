@@ -1,0 +1,57 @@
+﻿@using Forloop.HtmlHelpers
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    <link href="~/Content/MyFontsWebfontsKit.css" rel="stylesheet" />
+    <script language="javascript">
+        // wire up root so that scripts know where to call methods
+        var rootUrl = '@Url.Content("~/")';
+    </script>
+    @Scripts.Render("~/Scripts/uisearch.js")
+    @RenderSection("header", required: false)
+</head>
+<body ng-controller="MainPageViewModel">
+    <div id="sb-site" class="@ViewBag.PageClass">
+        @RenderSection("HomePageHeader", required: true)
+        <div class="container body-content">
+            <div class="jumbotron">
+                <h2><a href="~/Admin/">Administration</a></h2>
+                <div class="row">
+                    @RenderBody()
+                </div>
+                <hr />
+                <footer>
+                    <div class="bg-footer">
+                        <ul class="list-group hidden-xs">
+                            <li class="list-group-item footer-list-item">
+                                <small>&copy; Adventureworks.com Ltd. All rights reserved.</small>
+                            </li>
+                            <li class="list-group-item footer-list-item">Contact Us</li>
+                            <li class="list-group-item footer-list-item">Terms & Conditions</li>
+                            <li class="list-group-item footer-list-item">Delivery & Returns</li>
+                            <li class="list-group-item footer-list-item">Stay tuned</li>
+                        </ul>
+                        <div class="visible-xs">
+                            <small>&copy; Adventureworks.com Ltd. All rights reserved.</small>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/angular")
+    @Scripts.Render("~/js/mainpage.js")
+    @Scripts.Render("~/js/classie.js")
+    @Scripts.Render("~/js/uisearch.js")
+    @RenderSection("scripts", required: false)
+    @* Call just after the core scripts in the top level layout *@
+    @Html.RenderScripts()
+</body>
+</html>

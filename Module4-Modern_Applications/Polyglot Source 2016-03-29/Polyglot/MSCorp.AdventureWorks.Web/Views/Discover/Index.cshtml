@@ -1,0 +1,39 @@
+﻿@using MSCorp.AdventureWorks.Web.Models
+@model ItemSet
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>@ViewBag.Title</title>
+    </head>
+    <body>
+        <h1>@ViewBag.Title</h1>
+        <div>
+
+            @foreach (ItemModel item in Model.Items)
+            {
+                <hr />
+                <pre>Name : @item.Name</pre>
+                if (!string.IsNullOrEmpty(item.Subtitle1))
+                {
+                    <pre>@item.Subtitle1</pre>
+                }
+                if (!string.IsNullOrEmpty(item.Subtitle2))
+                {
+                    <pre>@item.Subtitle2</pre>
+                }
+                if (!string.IsNullOrEmpty(item.Body))
+                {
+                    <pre>@item.Body</pre>
+                }
+                <br />
+
+            }
+        </div>
+    </body>
+</html>

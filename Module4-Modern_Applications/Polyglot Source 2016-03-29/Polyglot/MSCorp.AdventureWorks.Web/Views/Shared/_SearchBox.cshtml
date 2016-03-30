@@ -1,0 +1,11 @@
+﻿<div id="sb-search" class="sb-search">
+    <form ng-submit="searchSubmit()">
+        <input class="sb-search-input" placeholder="Search" type="text" value="" name="search" id="search" ng-model="searchText"
+               typeahead="suggestion.text for suggestion in getAutoCompleteSuggestions($viewValue)"
+               typeahead-loading="loadingSuggestions"
+               typeahead-on-select="loadProduct($item)"
+               typeahead-template-url="searchTemplate.html" />
+        <input class="sb-search-submit" type="submit" value="">
+        <span class="sb-icon-search glyphicon glyphicon-search"></span>
+    </form>
+</div>
