@@ -46,8 +46,8 @@
     "DocumentDB": {
       "Database": "PartsUnlimited",
       "Collection": "Products",
-      "Endpoint": "",
-      "AuthKey": ""
+      "Endpoint": "https://data-module3.documents.azure.com:443/",
+      "AuthKey": "mywgRcMYpcsaRo72hbTw4HZRnEPAMzffzEYZVCZXXOWlslpnsUDwACsftxQBdSIGCC0APiq3g9dYYk2J550Eqg=="
     }
   }
 }
