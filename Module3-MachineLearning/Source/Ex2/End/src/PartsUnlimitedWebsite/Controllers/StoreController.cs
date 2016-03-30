@@ -4,12 +4,15 @@
 using Microsoft.AspNet.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using PartsUnlimited.Models;
-using PartsUnlimited.TextAnalytics;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
+using PartsUnlimited.TextAnalytics;
 
 namespace PartsUnlimited.Controllers
 {
+
+
     public class StoreController : Controller
     {
         private readonly IPartsUnlimitedContext _db;
@@ -67,11 +70,15 @@ namespace PartsUnlimited.Controllers
             return View(productData);
         }
 
-        public IActionResult Feedback([FromForm]string feedback)
+        // Insert the code snippet "MachineLearning - Text Analytics Feedback" below
+        public async Task<IActionResult> Feedback([FromForm]string feedback)
         {
             // get sentiment
-            var sentimentResult = textAnalyticsService.GetSentiment(feedback);
-            var phrases = textAnalyticsService.GetKeyPhrases(feedback);
+            var sentimentResult = await textAnalyticsService.GetSentiment(feedback);
+
+            // get key phrases
+            var phrases = await textAnalyticsService.GetKeyPhrases(feedback);
+
             var score = new Feedback() { Score = sentimentResult.Score, KeyPhrases = phrases.KeyPhrases };
             return View(score);
         }

@@ -43,7 +43,7 @@ namespace PartsUnlimited.TextAnalytics
         {
             var httpClient = ConstructTextAnalyticsHttpClient();
             var keyPhrasesRequest = "data.ashx/amla/text-analytics/v1/GetKeyPhrases?Text=" + inputTextEncoded;
-
+            
             var response = await httpClient.GetAsync(keyPhrasesRequest);
             if (!response.IsSuccessStatusCode)
             {
