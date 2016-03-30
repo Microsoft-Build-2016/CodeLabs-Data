@@ -209,7 +209,7 @@ Once that the SQL Data Warehouse is created, you need to create the tables and s
 
 	````SQL
 	CREATE TABLE dbo.ProductLogs
-	 (productid int, title nvarchar(50), category nvarchar(50), type nvarchar(5), total int)
+	 (productid int, title nvarchar(50), category nvarchar(50), type nvarchar(5), totalClicked int)
 	GO
 	
 	CREATE TABLE dbo.ProductStats
@@ -223,8 +223,8 @@ Once that the SQL Data Warehouse is created, you need to create the tables and s
 	 SELECT
 	  category,
 	  title,
-	  SUM(CASE WHEN type = 'view' THEN total ELSE 0 END) AS views,
-	  SUM(CASE WHEN type = 'add' THEN total ELSE 0 END) AS adds
+	  SUM(CASE WHEN type = 'view' THEN totalClicked ELSE 0 END) AS views,
+	  SUM(CASE WHEN type = 'add' THEN totalClicked ELSE 0 END) AS adds
 	 FROM dbo.ProductLogs GROUP BY title, category
 	END
 	GO
@@ -512,7 +512,7 @@ In this task, you'll create the input and output tables corresponding to the lin
 				"type": "String"
 			},
 			{
-				"name": "total",
+				"name": "totalClicked",
 				"type": "Int32"
 			}
 		],
@@ -570,7 +570,7 @@ In this task, you'll create the input and output tables corresponding to the lin
 						"type": "String"
 					},
 					{
-						"name": "total",
+						"name": "totalClicked",
 						"type": "Int32"
 					}
 				],
@@ -621,7 +621,7 @@ In this task, you'll create the input and output tables corresponding to the lin
 				"type": "String"
 			},
 			{
-				"name": "total",
+				"name": "totalClicked",
 				"type": "Int32"
 			}
 		],
@@ -670,7 +670,7 @@ In this task, you'll create the input and output tables corresponding to the lin
 						"type": "String"
 					},
 					{
-						"name": "total",
+						"name": "totalClicked",
 						"type": "Int32"
 					}
 				],
@@ -728,7 +728,7 @@ In this task, you'll write a Hive query to generate product stats (views and car
 				 get_json_object(jsonentry, "$.title"),
 				 get_json_object(jsonentry, "$.category"),
 				 get_json_object(jsonentry, "$.type"),
-				 CAST(get_json_object(jsonentry, "$.total") as BIGINT)
+				 CAST(get_json_object(jsonentry, "$.totalClicked") as BIGINT)
 		FROM LogsRaw;
 		````
 
@@ -773,7 +773,7 @@ In this task, you'll write a Hive query to generate product stats (views and car
 				 get_json_object(jsonentry, "$.title"),
 				 get_json_object(jsonentry, "$.category"),
 				 get_json_object(jsonentry, "$.type"),
-				 CAST(get_json_object(jsonentry, "$.total") as BIGINT)
+				 CAST(get_json_object(jsonentry, "$.totalClicked") as BIGINT)
 		FROM LogsRaw;
 		````
 
@@ -823,7 +823,7 @@ SELECT CAST(get_json_object(jsonentry, "$.productid") as BIGINT) as productid,
          get_json_object(jsonentry, "$.title") as title,
          get_json_object(jsonentry, "$.category") as category,
          get_json_object(jsonentry, "$.type") as type,
-         CAST(get_json_object(jsonentry, "$.total") as BIGINT) as total
+         CAST(get_json_object(jsonentry, "$.totalClicked") as BIGINT) as totalClicked
 FROM LogsRaw
 	````
 
