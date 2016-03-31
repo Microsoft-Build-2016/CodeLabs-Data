@@ -1,11 +1,9 @@
-$location = 'West US' # default location to created the resources
-$hdiContainer = 'hdi' # container where the HDI cluster files are stored (container is created by this script)
+
 $hdiPassword = 'P@ssword123' # password used to access the HDI cluster dashboard website
+$sshPassword = 'MSFTBuild2016'
 # Note: other parameters will be prompted to the user
 
-
 Login-AzureRmAccount
-
 
 ###### select subscription ######
 $subscriptions = Get-AzureRmSubscription | where {!$_.State -or $_.State -eq "Enabled"}
@@ -49,37 +47,53 @@ $storIndex = 1
 $storages | select StorageAccountName | foreach -begin {$i=0} -process { $i++; "{0}. {1}" -f $i, $_.StorageAccountName }
 $selectedStor = Read-Host 'Select storage account'
 while( ![int]::TryParse( $selectedStor, [ref]$storIndex ) -or $storIndex -gt $storages.length -or $storIndex -lt 1) {
-  $selectedStor = Read-Host 'Invalid input. Please enter the number of to storage account'
+  $selectedStor = Read-Host 'Invalid input. Please enter the number corresponding to storage account'
 }
 $storageAccountName = $storages[$storIndex - 1].StorageAccountName
 $resourceGroupName = $storages[$storIndex - 1].ResourceGroupName
 
 $storageAccountKey = Get-AzureRmStorageAccountKey -ResourceGroupName $resourceGroupName -Name $storageAccountName | %{ $_.Key1 }
 
+$storage = Get-AzureRmStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
 
+$location = $storage.Location
+
+$clusterName = Read-Host 'Enter a unique name for the HDI cluster'
+
+$hdiContainer = $clusterName # container where the HDI cluster files are stored (container is created by this script)
 Write-Host "Creating container for HDI cluster..."
 $storageContext = New-AzureStorageContext -StorageAccountName $storageAccountName -StorageAccountKey $storageAccountKey
 New-AzureStorageContainer -Name $hdiContainer -Context $storageContext -Permission Container
 
-$clusterName = Read-Host 'Enter a unique name for the HDI cluster'
 
 ###### Create HDI cluster ######
 $passwordAsSecureString = ConvertTo-SecureString $hdiPassword -AsPlainText -Force
 $clusterCredential = New-Object System.Management.Automation.PSCredential ("admin", $passwordAsSecureString)
 
+$sshpasswordAsSecureString = ConvertTo-SecureString $sshPassword -AsPlainText -Force
+$sshCredential = New-Object System.Management.Automation.PSCredential ("hdiadmin", $sshpasswordAsSecureString)
+
 Write-Host "Creating HDI cluster (will take ~15 minutes)..."
+
+$config = New-AzureRmHDInsightClusterConfig `
+    -HeadNodeSize Large `
+    -WorkerNodeSize Large `
+    -ClusterType Hadoop 
+
 $hdi = New-AzureRmHDInsightCluster `
-	-ClusterType Hadoop `
-	-OSType Windows `
+	-OSType Linux `
 	-Version "3.3" `
-	-ClusterSizeInNodes 1 `
+	-ClusterSizeInNodes 2 `
 	-ResourceGroupName $resourceGroupName `
 	-ClusterName $clusterName `
 	-HttpCredential $clusterCredential `
+    -SshCredential $sshCredential `
 	-Location $location `
-	-DefaultStorageAccountName "$storageAccountName.blob.core.windows.net" `
-	-DefaultStorageAccountKey $storageAccountKey `
+    -Config $config `
+    -DefaultStorageAccountName "$storageAccountName.blob.core.windows.net" `
+    -DefaultStorageAccountKey $storageAccountKey `
 	-DefaultStorageContainer $hdiContainer 
+
 
 while(!$hdi) {
 	Write-Host "Could not create HDI cluster! Please try with another cluster name" -foregroundcolor "red"
@@ -88,7 +102,7 @@ while(!$hdi) {
 	$hdi = New-AzureRmHDInsightCluster `
 		-ClusterType Hadoop `
 		-OSType Windows `
-		-Version "3.3" `
+		-Version "HDI 3.3" `
 		-ClusterSizeInNodes 1 `
 		-ResourceGroupName $resourceGroupName `
 		-ClusterName $clusterName `

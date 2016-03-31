@@ -1,5 +1,5 @@
 $resourceGroupName = 'DataCodeLab' # default resource group name to create the resources
-$location = 'West US' # default location to created the resources
+$location = Read-Host "Please enter a location where you'd like to host your service [Case Sensitive] (e.g.: East US):" # default location to created the resources
 $dataWarehouseUser = 'dwadmin' # username used for the SQL Server where the Data Warehouse is hosted
 $dataWarehousePassword = 'P@ssword123' # password used for the SQL Server where the Data Warehouse is hosted
 $dataWarehouseDbName = 'partsunlimited' # name of the SQL Data Warehouse database
@@ -67,16 +67,10 @@ while(!$sqlServer) {
 	$sqlServer = New-AzureRmSqlServer -ResourceGroupName $resourceGroupName -ServerName $dwServerName -SqlAdministratorCredentials $dwCredential -Location $location -ServerVersion "12.0"
 }
 Write-Host Setting Firewall rule for Azure services...
-New-AzureRmSqlServerFirewallRule -ResourceGroupName $resourceGroupName -ServerName $dwServerName -FirewallRuleName "azure" -StartIpAddress "0.0.0.0" -EndIpAddress "0.0.0.0"
+New-AzureRmSqlServerFirewallRule -ResourceGroupName $resourceGroupName -ServerName $dwServerName -FirewallRuleName "azure" -StartIpAddress "0.0.0.0" -EndIpAddress "255.255.255.255"
 Write-Host Setting Firewall rule for local machine...
 
-Try {
-	$localIp = ((Invoke-WebRequest ifconfig.me/ip).Content).Trim()
-}
-Catch {
-	$localIp = Read-Host 'Enter the public IP of this machine'
-}
-New-AzureRmSqlServerFirewallRule -ResourceGroupName $resourceGroupName -ServerName $dwServerName -FirewallRuleName "user" -StartIpAddress $localIp -EndIpAddress $localIp
+
 Write-Host Creating Data Warehouse $dataWarehouseDbName...
 New-AzureRmSqlDatabase -RequestedServiceObjectiveName "DW100" -DatabaseName $dataWarehouseDbName -ServerName $dwServerName -ResourceGroupName $resourceGroupName -Edition "DataWarehouse"
 
@@ -86,7 +80,7 @@ $sqlConn = New-Object System.Data.SQLClient.SQLConnection "Data Source=tcp:$dwSe
 $sqlConn.Open()
 $sqlCmd = New-Object System.Data.SqlClient.SqlCommand
 $sqlCmd.Connection = $sqlConn
-$sqlCmd.CommandText = "CREATE TABLE dbo.ProductLogs (productid int, title nvarchar(50), category nvarchar(50), type nvarchar(5), total int)"
+$sqlCmd.CommandText = "CREATE TABLE dbo.ProductLogs (productid int, title nvarchar(50), category nvarchar(50), type nvarchar(5), totalClicked int)"
 $sqlCmd.ExecuteNonQuery()
 $sqlCmd.CommandText = "CREATE TABLE dbo.ProductStats (category nvarchar(50), title nvarchar(50), views int, adds int)"
 $sqlCmd.ExecuteNonQuery()
@@ -98,8 +92,8 @@ BEGIN
  SELECT 
   category, 
   title, 
-  SUM(CASE WHEN type = 'view' THEN total ELSE 0 END) AS views, 
-  SUM(CASE WHEN type = 'add' THEN total ELSE 0 END) AS adds 
+  SUM(CASE WHEN type = 'view' THEN totalClicked ELSE 0 END) AS views, 
+  SUM(CASE WHEN type = 'add' THEN totalClicked ELSE 0 END) AS adds 
  FROM dbo.ProductLogs GROUP BY title, category 
 END
 "@

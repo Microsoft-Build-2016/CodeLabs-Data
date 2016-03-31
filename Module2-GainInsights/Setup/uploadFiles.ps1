@@ -1,5 +1,4 @@
 $resourceGroupName = 'DataCodeLab' # default resource group name to create the resources
-$location = 'West US' # default location to created the resources
 $logsContainer = 'partsunlimited' # container where the sample log files and HQL script will be uploaded (container is created by this script)
 $statsContainer = 'processeddata' # container where the processed data will be stored (container is created by this script)
 $dataFolder = 'Assets' # folder where are the files to be uploaded to the storage
@@ -58,6 +57,7 @@ $decision = $Host.UI.PromptForChoice('Storage account for HDI cluster and logs',
 if ($decision -eq 0) {
 	## create new storage account ##
 	$storageAccountName = Read-Host 'Enter a name for the new storage account'
+    $location = Read-Host "Please enter a location where you'd like to host your service [Case Sensitive] (e.g.: East US):" # default location to created the resources
 	$storage = New-AzureRmStorageAccount -Location $location -ResourceGroupName $resourceGroupName -Name $storageAccountName -Type "Standard_LRS"
 	
 	while(!$storage) {

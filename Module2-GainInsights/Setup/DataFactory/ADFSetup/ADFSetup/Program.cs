@@ -356,11 +356,23 @@ namespace ADFSetup
                 var HivePipelineName = "";
                 foreach(var pipeline in Pipelines.Pipelines)
                 {
-                    foreach(var activity in pipeline.Properties.Activities)
+                    var error = pipeline.Properties.ErrorMessage;
+                    if (error != null)
                     {
-                        if(activity.Type.Equals("HDInsightHiveActivity"))
+                        Console.Error.WriteLine("You have an error in your pipeline: " + pipeline.Name + ". Please talk to a proctor.");
+                        Console.WriteLine("In the meantime, let me do some more checks.");
+                    }
+                        
+
+                    foreach (var activity in pipeline.Properties.Activities)
+                    {
+                        if(activity.Type.Equals("HDInsightHive"))
                         {
                             HivePipelineName = pipeline.Name;
+                            if(error!=null)
+                            {
+                                HivePipelineName = "";
+                            }
 
                             var typeProperties = (HDInsightHiveActivity) activity.TypeProperties;
                             if(typeProperties.ScriptPath.ToLower().Contains("addpartition"))
@@ -427,9 +439,14 @@ namespace ADFSetup
                     Console.WriteLine("Done Creating Activity for Adding Partitions");
                     #endregion
 
-                    Console.WriteLine("Done with Part1. Press Enter to continue . . . ");
-                    Console.ReadLine();
                 }
+                else
+                {
+                    Console.WriteLine("Add Partitions Activity already exists. Moving on...");
+                }
+
+                Console.WriteLine("Done with Part1. Press Enter to continue . . . ");
+                Console.ReadLine();
             }
             if (!part.ToLower().Equals("part1") && (part.ToLower().Equals("part2") || part.ToLower().Equals("all")))
             {
@@ -452,6 +469,7 @@ namespace ADFSetup
                 //DW Linked Service
                 if (SQLDWServerLSName.Equals(""))
                 {
+                    SQLDWServerLSName = "SqlDWLinkedService";
                     Console.WriteLine("Please enter the DBServer name (The DBServer must already be provisioned): ");
                     var SQLDWServerName = Console.ReadLine();
 
@@ -484,14 +502,14 @@ namespace ADFSetup
                     }
                     while (key.Key != ConsoleKey.Enter);
 
-
-                    Console.WriteLine("Creating DW linked service");
+                    Console.WriteLine();
+                    Console.WriteLine("Creating DW linked service...");
                     client.LinkedServices.CreateOrUpdate(resourceGroupName, dataFactoryName,
                         new LinkedServiceCreateOrUpdateParameters()
                         {
                             LinkedService = new LinkedService()
                             {
-                                Name = "SqlDWLinkedService",
+                                Name = SQLDWServerLSName,
                                 Properties = new LinkedServiceProperties
                                 (
                                     new AzureSqlDataWarehouseLinkedService("Data Source=tcp:" + SQLDWServerName /*+ prefixNumber*/ + ".database.windows.net,1433;Initial Catalog=;User ID=" + username + "@" + SQLDWServerName /*+ prefixNumber*/ + ";Password=" + pass + ";Integrated Security=False;Encrypt=True;Connect Timeout=30")
@@ -777,7 +795,7 @@ namespace ADFSetup
                                             TypeProperties = new HDInsightHiveActivity()
                                             {
                                                 ScriptLinkedService = storageAccountLSName,
-                                                ScriptPath = "scripts/hive/logstocsv.hql",
+                                                ScriptPath = "partsunlimited/Scripts/logstocsv.hql",
                                                 Defines = DefinesVars
                                             },
                                             Inputs = new Collection<ActivityInput>()
@@ -889,6 +907,7 @@ namespace ADFSetup
                                 {
                                     Name = "SPROC Activity",
                                     Description = "Invokes SPROC Activity",
+                                    LinkedServiceName = SQLDWServerLSName,
                                     Inputs = new Collection<ActivityInput>()
                                     {
                                         new ActivityInput()

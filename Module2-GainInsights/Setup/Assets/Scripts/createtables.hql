@@ -1,15 +1,15 @@
 DROP TABLE IF EXISTS LogsRaw;
 CREATE EXTERNAL TABLE LogsRaw (jsonentry string) 
 PARTITIONED BY (year int, month int, day int)
-STORED AS TEXTFILE LOCATION "wasb://partsunlimited@${hiveconf:StorageAccountName}.blob.core.windows.net/logs";
+STORED AS TEXTFILE LOCATION "wasb://partsunlimited@codelabstorage.blob.core.windows.net/logs";
 
 DROP TABLE IF EXISTS OutputTable;
 CREATE EXTERNAL TABLE OutputTable (
-	productid int,
-	title string,
-	category string,
-	type string,
-	totalClicked int
+productid int,
+title string,
+category string,
+type string,
+totalClicked int
 ) PARTITIONED BY (year int, month int, day int) 
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'
-STORED AS TEXTFILE LOCATION 'wasb://processeddata@${hiveconf:StorageAccountName}.blob.core.windows.net/logs';
+STORED AS TEXTFILE LOCATION 'wasb://processeddata@codelabstorage.blob.core.windows.net/logs';
