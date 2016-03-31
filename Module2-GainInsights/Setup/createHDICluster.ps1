@@ -81,13 +81,12 @@ $config = New-AzureRmHDInsightClusterConfig `
     -ClusterType Hadoop 
 
 $hdi = New-AzureRmHDInsightCluster `
-	-OSType Linux `
+	-OSType Windows `
 	-Version "3.3" `
 	-ClusterSizeInNodes 2 `
 	-ResourceGroupName $resourceGroupName `
 	-ClusterName $clusterName `
 	-HttpCredential $clusterCredential `
-    -SshCredential $sshCredential `
 	-Location $location `
     -Config $config `
     -DefaultStorageAccountName "$storageAccountName.blob.core.windows.net" `
@@ -135,3 +134,48 @@ Write-Host Storage account name: $storageAccountName
 Write-Host Storage account key: $storageAccountKey
 Write-Host HDI storage container: $hdiContainer
 Write-Host ''
+
+
+Use-AzureRmHDInsightCluster -ResourceGroupName $resourceGroupName -ClusterName $clusterName -HttpCredential $clusterCredential
+ 
+
+$queryString = "DROP TABLE IF EXISTS RawData;"
+
+$queryString += "CREATE EXTERNAL TABLE LogsRaw (jsonentry string) 
+PARTITIONED BY (year int, month int, day int)
+STORED AS TEXTFILE LOCATION 'wasb://partsunlimited@$storageAccountName.core.windows.net/logs';"
+
+
+$queryString = "DROP TABLE IF EXISTS OutputTable;"
+
+$queryString += "CREATE EXTERNAL TABLE OutputTable (
+productid int,
+title string,
+category string,
+type string,
+totalClicked int
+) PARTITIONED BY (year int, month int, day int) 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'
+STORED AS TEXTFILE LOCATION 'wasb://processeddata@$storageAccountName.blob.core.windows.net/logs';"
+
+
+$uriHiveJobsubmit = "https://$clusterName.azurehdinsight.net/templeton/v1/hive?user.name=$clusterUsername"
+
+$hiveJobDefinition = @{execute=$queryString
+                       statusdir="ShowTableStatus"
+                       enablelog="false"}
+
+
+$hiveJobDefinition = New-AzureRmHDInsightHiveJobDefinition -Query $queryString 
+
+#Submit the job to the cluster
+Write-Host "Start the Hive job..." -ForegroundColor Green
+
+$hiveJob = Start-AzureRmHDInsightJob -ClusterName $clusterName -JobDefinition $hiveJobDefinition -ClusterCredential $clusterCredential
+
+#Wait for the Hive job to complete
+Write-Host "Wait for the job to complete..." -ForegroundColor Green
+Wait-AzureRmHDInsightJob -ClusterName $clusterName -JobId $hiveJob.JobId -ClusterCredential $clusterCredential
+
+
+Write-Host "HDInsight Cluster is created along with the tables: RawData & OutputTable"
