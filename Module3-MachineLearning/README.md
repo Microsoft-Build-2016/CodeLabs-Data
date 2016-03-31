@@ -120,7 +120,6 @@ In this task, you'll sign up for the Recommendations API service, and create a r
 | msbuild2016i@outlook.com | QeBR3r66lg9ydt3vOdYhlGYmSddco6heuXRlj18pv6w
 | msbuild2016j@outlook.com | wyzAlOoVkm3zSLAjnaEjiUtbZgc5bbxEcHuYdD3AWNA
 | msbuild2016m@outlook.com | eTrjrXRCIlc88hMTuuOKxQNXg6igeqtmj+XmgPocaTc
-| msbuild2016p@outlook.com | ca7W7d6751UQ6LJH6EISJZDpFSW8vinQM8M9SpheKLE
 | msbuild2016s@outlook.com | 8OuwzTTdF3Xjh0JrKAR6Wqve7uv8ESo9lDR1lpZuRqM
 | msbuild2016t@outlook.com | 36zHNj4TJD5PABWPz5+fm0xkcY1stHXwXmKAcK4V6d0
 | msbuild2016u@outlook.com | LQDulWPordHQBOErEuM64pkHKPpzn8lAe1Lr4JRshtY
