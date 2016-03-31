@@ -6,12 +6,14 @@
     public class Program
     {
        static string documentDbName = "PartsUnlimited";
-        static string documentDbEndpoint = "";
-        static string documentDbAuthKey = "";
+        //static string documentDbEndpoint = "";
+        //static string documentDbAuthKey = "";
         static string documentDbCollection = "Products";
 
         static void Main(string[] args)
         {
+            string documentDbEndpoint = args[0];
+            string documentDbAuthKey = args[1];
 
             Console.WriteLine("Initializing DocumentDB");
 

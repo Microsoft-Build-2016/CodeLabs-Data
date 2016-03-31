@@ -81,6 +81,7 @@ namespace ADFSetup
             if(factory == null)
             {
                 Console.Error.WriteLine("The Data Factory not found. Please go to the Azure Portal, create a data factory and try running this program again!");
+                Console.ReadLine();
                 Environment.Exit(1);
             }
 
@@ -126,7 +127,7 @@ namespace ADFSetup
                 }
             }
 
-            if (!part.ToLower().Equals("Part2") && (part.ToLower().Equals("Part1") || part.ToLower().Equals("All")))
+            if (!part.ToLower().Equals("part2") && (part.ToLower().Equals("part1") || part.ToLower().Equals("all")))
             {
 
                 #region StorageLinkedService
@@ -312,7 +313,7 @@ namespace ADFSetup
                                     LinkedServiceName = storageAccountLSName,
                                     TypeProperties = new AzureBlobDataset()
                                     {
-                                        FolderPath = "dummy",
+                                        FolderPath = "partsunlimited/dummy",
                                         Format = new TextFormat()
                                     },
                                     External = false,
@@ -390,7 +391,7 @@ namespace ADFSetup
                                             TypeProperties = new HDInsightHiveActivity()
                                             {
                                                 ScriptLinkedService = storageAccountLSName,
-                                                ScriptPath = "scripts/hive/addpartitions.hql",
+                                                ScriptPath = "partsunlimited/Scripts/addpartitions.hql",
                                                 Defines = DefinesVars
                                             },
                                             Inputs = new Collection<ActivityInput>()
@@ -430,7 +431,7 @@ namespace ADFSetup
                     Console.ReadLine();
                 }
             }
-            if (!part.ToLower().Equals("Part1") && (part.ToLower().Equals("Part2") || part.ToLower().Equals("All")))
+            if (!part.ToLower().Equals("part1") && (part.ToLower().Equals("part2") || part.ToLower().Equals("all")))
             {
                 if (storageAccountName.Equals(""))
                 {
@@ -544,7 +545,7 @@ namespace ADFSetup
                                     },
                                     new DataElement()
                                     {
-                                        Name = "totalType",
+                                        Name = "totalClicked",
                                         Type = "Int32"
                                     }
                                 },
@@ -645,7 +646,7 @@ namespace ADFSetup
                                     },
                                     new DataElement()
                                     {
-                                        Name = "totalType",
+                                        Name = "totalClicked",
                                         Type = "Int32"
                                     }
                                     },
@@ -744,7 +745,7 @@ namespace ADFSetup
                                             TypeProperties = new HDInsightHiveActivity()
                                             {
                                                 ScriptLinkedService = storageAccountLSName,
-                                                ScriptPath = "scripts/hive/addpartitions.hql",
+                                                ScriptPath = "partsunlimited/Scripts/addpartitions.hql",
                                                 Defines = DefinesVars
                                             },
                                             Inputs = new Collection<ActivityInput>()
