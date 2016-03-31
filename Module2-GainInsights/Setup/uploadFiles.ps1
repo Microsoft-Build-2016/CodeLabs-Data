@@ -39,6 +39,7 @@ else {
 
 Write-Host "Selected subscription: $subscriptionName"
 
+$location = Read-Host "Please enter a location where you'd like to host your service [Case Sensitive] (e.g.: East US)" # default location to created the resources
 
 ###### create Resource Group ######
 $resourceGroup = Get-AzureRmResourceGroup -Name $resourceGroupName -ErrorAction Ignore
@@ -57,7 +58,6 @@ $decision = $Host.UI.PromptForChoice('Storage account for HDI cluster and logs',
 if ($decision -eq 0) {
 	## create new storage account ##
 	$storageAccountName = Read-Host 'Enter a name for the new storage account'
-    $location = Read-Host "Please enter a location where you'd like to host your service [Case Sensitive] (e.g.: East US)" # default location to created the resources
 	$storage = New-AzureRmStorageAccount -Location $location -ResourceGroupName $resourceGroupName -Name $storageAccountName -Type "Standard_LRS"
 	
 	while(!$storage) {

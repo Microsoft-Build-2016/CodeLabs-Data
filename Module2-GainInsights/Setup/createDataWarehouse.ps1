@@ -1,5 +1,4 @@
 $resourceGroupName = 'DataCodeLab' # default resource group name to create the resources
-$location = Read-Host "Please enter a location where you'd like to host your service [Case Sensitive] (e.g.: East US):" # default location to created the resources
 $dataWarehouseUser = 'dwadmin' # username used for the SQL Server where the Data Warehouse is hosted
 $dataWarehousePassword = 'P@ssword123' # password used for the SQL Server where the Data Warehouse is hosted
 $dataWarehouseDbName = 'partsunlimited' # name of the SQL Data Warehouse database
@@ -42,6 +41,7 @@ else {
 
 Write-Host "Selected subscription: $subscriptionName"
 
+$location = Read-Host "Please enter a location where you'd like to host your service [Case Sensitive] (e.g.: East US)" # default location to created the resources
 
 ###### create Resource Group ######
 $resourceGroup = Get-AzureRmResourceGroup -Name $resourceGroupName -ErrorAction Ignore
