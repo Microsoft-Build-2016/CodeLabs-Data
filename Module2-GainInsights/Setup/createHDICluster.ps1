@@ -143,7 +143,7 @@ $queryString = "DROP TABLE IF EXISTS RawData;"
 
 $queryString += "CREATE EXTERNAL TABLE LogsRaw (jsonentry string) 
 PARTITIONED BY (year int, month int, day int)
-STORED AS TEXTFILE LOCATION 'wasb://partsunlimited@$storageAccountName.core.windows.net/logs';"
+STORED AS TEXTFILE LOCATION 'wasb://partsunlimited@$storageAccountName.blob.core.windows.net/logs';"
 
 
 $queryString = "DROP TABLE IF EXISTS OutputTable;"
@@ -178,4 +178,4 @@ Write-Host "Wait for the job to complete..." -ForegroundColor Green
 Wait-AzureRmHDInsightJob -ClusterName $clusterName -JobId $hiveJob.JobId -ClusterCredential $clusterCredential
 
 
-Write-Host "HDInsight Cluster is created along with the tables: RawData & OutputTable"
+Write-Host "HDInsight Cluster is created along with the tables: RawData & OutputTable!"
