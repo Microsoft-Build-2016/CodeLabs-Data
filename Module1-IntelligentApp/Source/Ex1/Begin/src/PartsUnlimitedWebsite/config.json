@@ -41,8 +41,8 @@
     "DocumentDB": {
       "Database": "PartsUnlimited",
       "Collection": "Products",
-      "Endpoint": "https://datacodelabs.documents.azure.com:443/",
-      "AuthKey": "rXROjc1jLX2Ekg6OPYvo6okGmIlqzKAcfaJrt2j1YMaGXE0P59oGKFAUKMFeKpHe0J4UodqmZsaZl9i6Pj0drQ=="
+      "Endpoint": "",
+      "AuthKey": ""
     }
   }
 }

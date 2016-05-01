@@ -81,17 +81,12 @@
 
         public Product GetById(int id)
         {
-            return this.Set<Product>()
-                .Where(d => d.ProductId == id)
-                .AsEnumerable()
-                .FirstOrDefault();
+            return null;
         }
 
         public IEnumerable<Product> Find(Expression<Func<Product, bool>> predicate)
         {
-            return this.Set<Product>()
-                .Where(predicate)
-                .AsEnumerable();
+            return null;
         }
 
         public IQueryable<T> Set<T>()
