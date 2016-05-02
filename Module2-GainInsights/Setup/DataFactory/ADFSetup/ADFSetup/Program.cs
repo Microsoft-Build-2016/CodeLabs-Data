@@ -26,6 +26,7 @@ namespace ADFSetup
             //string prefixNumber = "";
             //string part = "All";
 
+            /*
             if (args.Count()<4)
             {
                 Console.Error.WriteLine("We need exacty 4 arguments: <SubscriptionID> <ResourceGroupName> <DataFactoryName> <part1/part2/all>");
@@ -34,11 +35,28 @@ namespace ADFSetup
                 Environment.Exit(1);
             }
 
+            
+
             string subscriptionID = args[0];
             string resourceGroupName = args[1];
             string dataFactoryName = args[2];
             //string prefixNumber = "";
             string part = args[3];
+            */
+
+            Console.WriteLine("Please enter the subscriptionID:");
+            string subscriptionID = Console.ReadLine();
+
+            Console.WriteLine("Please enter the Resource Group Name:");
+            string resourceGroupName = Console.ReadLine();
+
+            Console.WriteLine("Please enter the Data Factory Name:");
+            string dataFactoryName = Console.ReadLine();
+
+            //Change this to "all" if you'd like to automate the entire DF creation. 
+            //Other options are "part1" and "part2"
+            //In order for this to work, the Data factory must already be created.
+            string part = "all";
 
             int DaysToRunTheFactory = -4;
             Uri resourceManagerUri = new Uri(ConfigurationManager.AppSettings["ResourceManagerEndpoint"]);
@@ -54,9 +72,8 @@ namespace ADFSetup
 
             TokenCloudCredentials aadTokenCredentials =
                 new TokenCloudCredentials(
-                        subscriptionID,
+                    subscriptionID,
                         GetAuthorizationHeader());
-
 
             //****Linked Service Names****//
             string SQLDWServerLSName = "";
@@ -175,27 +192,7 @@ namespace ADFSetup
                     var cUsername = Console.ReadLine();
 
                     Console.WriteLine("Enter the admin password of your cluster: ");
-                    ConsoleKeyInfo key ;
-                    
-                    string pass = "";
-                    do
-                    {
-                        key = Console.ReadKey(true);
-                        if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
-                        {
-                            pass += key.KeyChar;
-                            Console.Write("*");
-                        }
-                        else
-                        {
-                            if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
-                            {
-                                pass = pass.Substring(0, (pass.Length - 1));
-                                Console.Write("\b \b");
-                            }
-                        }
-                    }
-                    while (key.Key != ConsoleKey.Enter);
+                    var pass = Console.ReadLine();
 
                     client.LinkedServices.CreateOrUpdate(resourceGroupName, dataFactoryName,
                         new LinkedServiceCreateOrUpdateParameters()
@@ -480,29 +477,9 @@ namespace ADFSetup
                     var username = Console.ReadLine();
 
                     Console.WriteLine("Please enter the Password: ");
-                    ConsoleKeyInfo key;
+                    string pass = Console.ReadLine();
 
-                    string pass = "";
-                    do
-                    {
-                        key = Console.ReadKey(true);
-                        if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
-                        {
-                            pass += key.KeyChar;
-                            Console.Write("*");
-                        }
-                        else
-                        {
-                            if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
-                            {
-                                pass = pass.Substring(0, (pass.Length - 1));
-                                Console.Write("\b \b");
-                            }
-                        }
-                    }
-                    while (key.Key != ConsoleKey.Enter);
 
-                    Console.WriteLine();
                     Console.WriteLine("Creating DW linked service...");
                     client.LinkedServices.CreateOrUpdate(resourceGroupName, dataFactoryName,
                         new LinkedServiceCreateOrUpdateParameters()
