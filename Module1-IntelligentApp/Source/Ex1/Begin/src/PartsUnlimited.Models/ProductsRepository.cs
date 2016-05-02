@@ -86,7 +86,9 @@
 
         public IEnumerable<Product> Find(Expression<Func<Product, bool>> predicate)
         {
-            return null;
+            return this.Set<Product>()
+                .Where(predicate)
+                .AsEnumerable();
         }
 
         public IQueryable<T> Set<T>()
